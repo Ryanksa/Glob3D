@@ -23,7 +23,7 @@ On first visit, users can sign in with a third-party account. When signed in, us
 
 ## Key Features of Beta Version
 
-- Sign in with a third-party account
+- Sign in with a third-party account (Google)
 - Walk around the 3D world with a 3D character model
 - Write and post a blog anywhere in the 3D world
 - Access and read an existing blog posts
@@ -36,7 +36,7 @@ On first visit, users can sign in with a third-party account. When signed in, us
     - see my current location
     - search keywords to find the locations of other blog posts
     - see the locations of posts made by users I follow
-- Open an invetory to:
+- Open a player-unique inventory to:
     - see the list of blog post I made
     - see the list of blog post I liked
     - see the list of users I follow
