@@ -2,7 +2,7 @@ const Follow = require('../../models/follow');
 const User = require('../../models/user');
 
 module.exports = {
-    follows: function({ first, after }, req) {
+    follows: function({ first, after }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return Follow.find().skip(after).limit(first)
             .populate("follower")
@@ -14,7 +14,7 @@ module.exports = {
                 throw err;
             });
     },
-    followUser: function({ userId }, req) {
+    followUser: function({ userId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         if (req.userId === userId) throw new Error("Cannot follow self");
         return User.findOne({ _id: req.userId })
@@ -42,7 +42,7 @@ module.exports = {
                 throw err;
             });
     },
-    unfollowUser: function({ userId }, req) {
+    unfollowUser: function({ userId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return User.findOne({ _id: req.userId })
             .then(function(follower) {

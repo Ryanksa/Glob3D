@@ -3,7 +3,7 @@ const User = require('../../models/user');
 const Blog = require('../../models/blog');
 
 module.exports = {
-    likes: function({ first, after }, req) {
+    likes: function({ first, after }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return Like.find().skip(after).limit(first)
             .populate("user")
@@ -15,7 +15,7 @@ module.exports = {
                 throw err;
             });
     },
-    likeBlog: function({ blogId }, req) {
+    likeBlog: function({ blogId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return User.findOne({ _id: req.userId })
             .then(function(user) {
@@ -42,7 +42,7 @@ module.exports = {
                 throw err;
             });
     },
-    unlikeBlog: function({ blogId }, req) {
+    unlikeBlog: function({ blogId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return User.findOne({ _id: req.userId })
             .then(function(user) {

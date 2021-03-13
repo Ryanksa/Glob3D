@@ -3,7 +3,7 @@ const User = require('../../models/user');
 const Blog = require('../../models/blog');
 
 module.exports = {
-    comments: function({ first, after }, req) {
+    comments: function({ first, after }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return Comment.find().skip(after).limit(first)
             .populate("user")
@@ -15,7 +15,7 @@ module.exports = {
                 throw err;
             });
     },
-    addComment: function({ blogId, content }, req) {
+    addComment: function({ blogId, content }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return User.findOne({ _id: req.userId })
             .then(function(user) {

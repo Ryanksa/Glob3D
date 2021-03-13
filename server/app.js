@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie');
 const config = require('./config');
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
@@ -12,16 +13,12 @@ app.use(bodyParser.json());
 let isAuthenticated = function(req, res, next) {
     req.isAuth = false;
 
-    // no Authorization header
-    const authHeader = req.get("Authorization");
-    if (!authHeader) return next();
-    
-    // no token attached to Authorization header
-    const token = authHeader.split(' ')[1];
-    if (!token || token === "") return next();
-    
-    // attached token is invalid
-    const decodedToken = jwt.verify(token, config.jwtSecret);
+    // extract jsonwebtoken from cookie
+    const cookies = cookie.parse(req.headers.cookie || "");
+    if (!cookies.token) return next();
+
+    // verify jsonwebtoken
+    const decodedToken = jwt.verify(cookies.token, config.jwtSecret);
     if (!decodedToken) return next();
 
     // authentication successful, update request fields
@@ -30,11 +27,12 @@ let isAuthenticated = function(req, res, next) {
     next();
 };
 
-app.use('/graphql', isAuthenticated, graphqlHTTP({
+app.use('/graphql', isAuthenticated, graphqlHTTP((req, res) => ({
     schema: graphqlSchema,
     rootValue: graphqlResolver,
+    context: { req, res }, 
     graphiql: true
-}));
+})));
 
 
 const mongoose = require('mongoose');

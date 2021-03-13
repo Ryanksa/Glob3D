@@ -4,7 +4,7 @@ const Like = require('../../models/like');
 const Comment = require('../../models/comment');
 
 module.exports = {
-    blogs: function({ first, after }, req) {
+    blogs: function({ first, after }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return Blog.find().skip(after).limit(first)
             .populate("author")
@@ -15,7 +15,7 @@ module.exports = {
                 throw err;
             });
     },
-    createBlog: function({ title, content }, req) {
+    createBlog: function({ title, content }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return User.findOne({ _id: req.userId })
             .then(function(user) {
@@ -39,7 +39,7 @@ module.exports = {
                 throw err;
             });
     },
-    deleteBlog: function({ blogId }, req) {
+    deleteBlog: function({ blogId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return Blog.findOne({ _id: blogId })
             .then(function(blog) {

@@ -43,7 +43,8 @@ module.exports = buildSchema(`
         likes(first: Int!, after: Int!): [Like!]!
         comments(first: Int!, after: Int!): [Comment!]!
         follows(first: Int!, after: Int!): [Follow!]!
-        signin(email: String!, password: String!): String!
+        signin(email: String!, password: String!): Boolean!
+        signout: Boolean!
     }
 
     type RootMutation {
