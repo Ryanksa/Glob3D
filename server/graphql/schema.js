@@ -37,14 +37,20 @@ module.exports = buildSchema(`
         date: String!
     }
 
+    type World {
+        terrain: [[Int!]!]!
+        size: Int
+    }
+
     type RootQuery {
         users(first: Int!, after: Int!): [User!]!
         blogs(first: Int!, after: Int!): [Blog!]!
         likes(first: Int!, after: Int!): [Like!]!
         comments(first: Int!, after: Int!): [Comment!]!
         follows(first: Int!, after: Int!): [Follow!]!
-        signin(email: String!, password: String!): Boolean!
+        signin(email: String!, password: String!): User!
         signout: Boolean!
+        world: World
     }
 
     type RootMutation {

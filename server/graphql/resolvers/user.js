@@ -32,7 +32,7 @@ module.exports = {
                             path: "/",
                             maxAge: 60 * 60 * 4 // 4hours
                         }));
-                        return true;
+                        return user;
                     });
             })
             .catch(function(err) {

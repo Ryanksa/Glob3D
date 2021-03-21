@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { graphqlHTTP } = require('express-graphql');
+const { initWorld, generateTerrain } = require('./worldGeneration');
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const config = require('./config');
@@ -46,7 +47,7 @@ mongoose.connect(process.env.MONGO_URI || config.mongoUri)
     .then(function() {
         app.listen(PORT, function(err) {
             if (err) console.log(err);
-            else console.log("Server started on port %s", PORT);
+            initWorld("Server started on port " + PORT);
         });
     })
     .catch(function(err) {

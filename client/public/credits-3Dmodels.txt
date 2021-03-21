@@ -1,0 +1,6 @@
+GLTF 3D models taken from:
+"Low poly assets" (https://skfb.ly/6QSnP) by premudraya is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+"Low Poly Grass Pack" (https://skfb.ly/6SGGt) by Anskar is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+"Low poly Tree Trunk" (https://skfb.ly/6UrTV) by Anskar is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+"Low poly Cliff" (https://skfb.ly/6WWZQ) by Anskar is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+"Low Poly Flowers" (https://skfb.ly/6WtsA) by Anskar is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
