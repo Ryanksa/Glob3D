@@ -44,5 +44,25 @@ module.exports = {
             .catch(function(err) {
                 throw err;
             });
+    },
+    delComment: function({ commentId}, { req }) {
+        if (!req.isAuth) throw new Error("Unauthorized access");
+        return Comment.findById(commentId)
+            .then(function(comment){
+                if(!comment){
+                    throw new Error(`Comment with id ${commentId} does not exist`);
+                }
+                if(comment.user !== req.userId){
+                    throw new Error(`Author with id ${req.userId} did not post the comment`);
+                }
+                // remove commment
+                return Comment.deleteOne({_id : commentId});
+            })
+            .then(function (result){
+                return result.deletedCount !== 0;
+            }) 
+            .catch(function(err) {
+                throw err;
+            });
     }
 };
