@@ -10,8 +10,13 @@ const Camera = (props) => {
     const controls = useRef();
 
     useEffect(() => {
-        document.addEventListener("click", () => {
-            controls.current.lock();
+        const lockCamera = () => {
+            if (controls.current) controls.current.lock();
+        };
+        document.addEventListener("click", lockCamera);
+
+        return (() => {
+            document.removeEventListener("click", lockCamera);
         });
     }, []);
 

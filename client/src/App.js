@@ -14,7 +14,7 @@ import {
 import Signup from './components/Signup/Signup';
 
 import React from 'react';
-import UserContext from './contexts/UserContext'; 
+import UserContext from './contexts/userContext'; 
 
 const SESSION_USER_KEY = `GLOB3D_USER`;
 

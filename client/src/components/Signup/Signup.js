@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Signup.scss';
 
-import UserContext from '../../contexts/UserContext';
+import UserContext from '../../contexts/userContext';
 
 import { Button, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
 

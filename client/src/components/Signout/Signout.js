@@ -5,7 +5,7 @@ import './Signout.scss';
 import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
 import { Redirect } from 'react-router';
 
-import UserContext from '../../contexts/UserContext'; 
+import UserContext from '../../contexts/userContext'; 
 
 class Signout extends React.Component {
   static contextType = UserContext;

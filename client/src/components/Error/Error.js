@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Error.scss';
 
 import { Alert } from '@material-ui/lab';
-import UserContext from '../../contexts/UserContext';
+import UserContext from '../../contexts/userContext';
 
 class Error extends React.Component {
   constructor(props) {

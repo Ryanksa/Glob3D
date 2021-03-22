@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Header.scss';
 
 import { Link } from "react-router-dom";
-import UserContext from '../../contexts/UserContext';
+import UserContext from '../../contexts/userContext';
 
 import logo from '../../assets/logo.svg';
 
