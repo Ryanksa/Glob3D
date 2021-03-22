@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Login.scss';
+import './Signup.scss';
 
 import UserContext from '../../contexts/UserContext';
 
-import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
+import { Button, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
 
 import { Redirect } from 'react-router';
 
-class Login extends React.Component {
+class Signup extends React.Component {
   static contextType = UserContext;
 
   constructor(props) {
@@ -16,26 +16,21 @@ class Login extends React.Component {
     this.state = {
       email: "",
       password: "",
+      name: "",
       redirect: false
     };
 
     this.handleChange = this.handleChange.bind(this);   // handle input changes
-    this.login = this.login.bind(this);
+    this.signup = this.signup.bind(this);
   }
 
-  componentDidMount() {
-    if(Object.keys(this.context.user) > 0) {
-      this.setState({ redirect: true });
-    }
-  }
-
-  login() {
+  signup() {
     fetch('/graphql', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query: `
-        query {
-          signin(email:"${this.state.email}", password:"${this.state.password}") {
+        mutation {
+          signup(email:"${this.state.email}", password:"${this.state.password}", name:"${this.state.name}") {
             email
             name
           }
@@ -45,13 +40,11 @@ class Login extends React.Component {
     }).then((res) => {
       return res.json();
     }).then((res) => {
-      if(res.data) {
-        this.context.updateUser(res.data.signin);
-        this.setState({ redirect: true });
-      }
+      this.context.updateUser(res.data.signup);
+      this.setState({ redirect: true });
     });
   }
-  
+
   // handling user input code adapted from https://stackoverflow.com/a/43746799
   handleChange(event) {
     event.persist();
@@ -63,22 +56,27 @@ class Login extends React.Component {
       return <Redirect to='/world'/>
     }
     return (
-      <div className="login-wrapper">
-        <div className="login-form">
-          <h1>Login</h1>
-          <FormControl classes={{ root: "login-form-field" }}>
+      <div className="signup-wrapper">
+        <div className="signup-form">
+          <h1>Signup</h1>
+          <FormControl classes={{ root: "signup-form-field" }}>
+            <InputLabel htmlFor="name">Name</InputLabel>
+            <Input id="name" aria-describedby="Name" required={true} onChange={this.handleChange}/>
+            <FormHelperText>The name you want others to call you by.</FormHelperText>
+          </FormControl>
+          <FormControl classes={{ root: "signup-form-field" }}>
             <InputLabel htmlFor="email">Email address</InputLabel>
             <Input id="email" aria-describedby="Email address" required={true} onChange={this.handleChange}/>
           </FormControl>
-          <FormControl classes={{ root: "login-form-field" }}>
+          <FormControl classes={{ root: "signup-form-field" }}>
             <InputLabel htmlFor="password">Password</InputLabel>
             <Input id="password" aria-describedby="Password" required={true} type="password" onChange={this.handleChange}/>
           </FormControl>
-          <Button variant="contained" classes={{ root: "login-button" }} onClick={this.login}>Login</Button>
+          <Button variant="contained" classes={{ root: "signup-button" }} onClick={() => this.signup()}>Signup</Button>
         </div>
       </div>
     );
   }
 }
 
-export default Login;
+export default Signup;

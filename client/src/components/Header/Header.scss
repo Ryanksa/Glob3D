@@ -1,3 +1,41 @@
-.Header {
-    margin: 0;
+$header-offset: 20px;
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background-color: rgb(36, 37, 38);
+    color: rgb(228, 230, 235);
+    border-bottom: 1px solid black;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    height: 70px;
+
+    .header-link {
+        margin: 0 10px;
+        color: rgb(228, 230, 235);
+        text-decoration: none;
+    }
+
+    .header-logo-link {
+        display: flex;
+        align-items: center;
+        margin: 0 $header-offset;
+        color: rgb(228, 230, 235);
+        text-decoration: none;
+
+        .header-logo {
+            width: 45px;
+            height: 45px;
+            min-height: 45px;
+            background-image: url('../../assets/logo.svg');
+            margin-right: 10px;
+        }
+    }
+
+    .header-nav-links {
+        margin: 0 $header-offset;
+    }
 }

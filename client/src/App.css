@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+.page-wrapper {
+  margin-top: 70px; /* offset header height */
+  padding: 0 45px;
+}
