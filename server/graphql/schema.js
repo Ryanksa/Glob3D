@@ -7,6 +7,8 @@ module.exports = buildSchema(`
         password: String
         name: String!
         date: String!
+        x: Int
+        z: Int
     }
 
     type Blog {
@@ -15,6 +17,8 @@ module.exports = buildSchema(`
         content: String!
         author: User!
         date: String!
+        x: Int
+        z: Int
     }
 
     type Like {
@@ -44,10 +48,16 @@ module.exports = buildSchema(`
 
     type RootQuery {
         users(first: Int!, after: Int!): [User!]!
-        blogs(first: Int!, after: Int!): [Blog!]!
-        likes(first: Int!, after: Int!): [Like!]!
-        comments(first: Int!, after: Int!): [Comment!]!
-        follows(first: Int!, after: Int!): [Follow!]!
+        getUserPosition: [Int!]!
+        blogs(first: Int!, after: Int!, authorId: ID): [Blog!]!
+        numBlogs(authorId: ID): Int!
+        blogsNearUser(limit: Int!): [Blog!]!
+        likes(first: Int!, after: Int!, userId: ID, blogId: ID): [Like!]!
+        numLikes(userId: ID, blogId: ID): Int!
+        comments(first: Int!, after: Int!, userId: ID, blogId: ID): [Comment!]!
+        numComments(userId: ID, blogId: ID): Int!
+        follows(first: Int!, after: Int!, followerId: ID, followedId: ID): [Follow!]!
+        numFollows(followerId: ID, followedId: ID): Int!
         signin(email: String!, password: String!): User!
         signout: Boolean!
         world: World
@@ -55,11 +65,13 @@ module.exports = buildSchema(`
 
     type RootMutation {
         signup(email: String!, password: String!, name: String!): User!
-        createBlog(title: String!, content: String!): Blog!
-        deleteBlog(blogId: ID!): Blog!
+        updateUserPosition(position: [Int!]!): Boolean!
+        createBlog(title: String!, content: String!, position: [Int!]!): Blog!
+        deleteBlog(blogId: ID!): Boolean!
         likeBlog(blogId: ID!): String!
         unlikeBlog(blogId: ID!): String!
         addComment(blogId: ID!, content: String!): Comment!
+        deleteComment(commentId: ID!): Boolean!
         followUser(userId: ID!): String!
         unfollowUser(userId: ID!): String!
     }

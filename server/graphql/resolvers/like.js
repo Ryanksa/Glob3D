@@ -3,17 +3,42 @@ const User = require('../../models/user');
 const Blog = require('../../models/blog');
 
 module.exports = {
-    likes: function({ first, after }, { req }) {
+    likes: function({ first, after, userId, blogId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
-        return Like.find().skip(after).limit(first)
+        if (first > 20) throw new Error("Cannot query more than 20 results");
+        
+        let filter = {};
+        if (userId) filter.user = userId;
+        if (blogId) filter.blog = blogId;
+
+        return Like.find(filter).skip(after).limit(first)
             .populate("user")
             .populate("blog")
             .then(function(likes) {
+                likes.map(function(like) {
+                    like.user.password = null;
+                    // TODO: populate like.blog.author
+                    return like;
+                });
                 return likes;
             })
             .catch(function(err) {
                 throw err;
             });
+    },
+    numLikes: function({ userId, blogId }, { req }) {
+        if (!req.isAuth) throw new Error("Unauthorized access");
+        let filter = {};
+        if (userId) filter.user = userId;
+        if (blogId) filter.blog = blogId;
+
+        return Like.countDocuments(filter)
+            .then(function(count) {
+                return count;
+            })
+            .catch(function(err) {
+                throw err;
+            })
     },
     likeBlog: function({ blogId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");

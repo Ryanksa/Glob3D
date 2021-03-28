@@ -3,13 +3,38 @@ const User = require('../../models/user');
 const Blog = require('../../models/blog');
 
 module.exports = {
-    comments: function({ first, after }, { req }) {
+    comments: function({ first, after, userId, blogId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
-        return Comment.find().skip(after).limit(first)
+        if (first > 20) throw new Error("Cannot query more than 20 results");
+        
+        let filter = {};
+        if (userId) filter.user = userId;
+        if (blogId) filter.blog = blogId;
+
+        return Comment.find(filter).skip(after).limit(first)
             .populate("user")
             .populate("blog")
             .then(function(comments) {
+                comments.map(function(comment) {
+                    comment.user.password = null;
+                    // TODO: populate comment.blog.author
+                    return comment;
+                });
                 return comments;
+            })
+            .catch(function(err) {
+                throw err;
+            });
+    },
+    numComments: function({ userId, blogId }, { req }) {
+        if (!req.isAuth) throw new Error("Unauthorized access");
+        let filter = {};
+        if (userId) filter.user = userId;
+        if (blogId) filter.blog = blogId;
+
+        return Comment.countDocuments(filter)
+            .then(function(count) {
+                return count;
             })
             .catch(function(err) {
                 throw err;
@@ -39,20 +64,22 @@ module.exports = {
                 return Blog.populate(comment, [{ path: "blog" }]);
             })
             .then(function(comment) {
+                comment.user.password = null;
+                // TODO: populate comment.blog.author
                 return comment;
             })
             .catch(function(err) {
                 throw err;
             });
     },
-    delComment: function({ commentId}, { req }) {
+    deleteComment: function({ commentId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
         return Comment.findById(commentId)
             .then(function(comment){
                 if(!comment){
                     throw new Error(`Comment with id ${commentId} does not exist`);
                 }
-                if(comment.user !== req.userId){
+                if(comment.user != req.userId){
                     throw new Error(`Author with id ${req.userId} did not post the comment`);
                 }
                 // remove commment

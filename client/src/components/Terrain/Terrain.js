@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Terrain.scss';
-import { usePlane } from 'use-cannon';
 
+import { fetchGraphql } from '../../fetchService';
 import Wasteland from './Wasteland';
 import BluePeriod from './BluePeriod';
 import AutumnFalls from './AutumnFalls';
@@ -20,19 +20,14 @@ const Terrain = () => {
   const [len, setLen] = useState(0);
 
   useEffect(() => {
-    fetch('/graphql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: `
-          query {
-            world {
-              terrain
-              size
-            }
-          }`
-      }),
-      credentials: "include"
-    })
+    fetchGraphql(`
+      query {
+        world {
+          terrain
+          size
+        }
+      }
+    `)
     .then((res) => { return res.json() })
     .then((data) => {
       if (data.data.world) {

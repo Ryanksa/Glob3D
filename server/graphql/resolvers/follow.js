@@ -2,15 +2,40 @@ const Follow = require('../../models/follow');
 const User = require('../../models/user');
 
 module.exports = {
-    follows: function({ first, after }, { req }) {
+    follows: function({ first, after, followerId, followedId }, { req }) {
         if (!req.isAuth) throw new Error("Unauthorized access");
-        return Follow.find().skip(after).limit(first)
+        if (first > 20) throw new Error("Cannot query more than 20 results");
+        
+        let filter = {};
+        if (followerId) filter.follower = followerId;
+        if (followedId) filter.followed = followedId;
+
+        return Follow.find(filter).skip(after).limit(first)
             .populate("follower")
             .populate("followed")
             .then(function(follows) {
+                follows.map(function(follow) {
+                    follow.follower.password = null;
+                    follow.followed.password = null;
+                    return follow;
+                });
                 return follows;
             })
             .catch(function(err){
+                throw err;
+            });
+    },
+    numFollows: function({ followerId, followedId }, { req }) {
+        if (!req.isAuth) throw new Error("Unauthorized access");
+        let filter = {};
+        if (followerId) filter.follower = followerId;
+        if (followedId) filter.followed = followedId;
+
+        return Follow.countDocuments(filter)
+            .then(function(count) {
+                return count;
+            })
+            .catch(function(err) {
                 throw err;
             });
     },

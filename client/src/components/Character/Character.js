@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Character.scss';
 import Camera from './Camera';
+import { fetchGraphql } from '../../fetchService';
 
 import { useFrame, useThree } from 'react-three-fiber';
 import { useSphere } from 'use-cannon';
 import { Vector3 } from 'three';
 
 // code for character movement and camera referenced from https://www.youtube.com/watch?v=Lc2JvBXMesY
-const SPEED = 50;
+const SPEED = 30;
 const move = (key) => {
   switch(key) {
       case "KeyW":
@@ -18,17 +19,21 @@ const move = (key) => {
       case "KeyA":
           return "left";
       case "KeyD":
-          return "right"
+          return "right";
   }
 }
+const getXZ = (position) => {
+  const x = Math.round(position.x);
+  const z = Math.round(position.z);
+  return [x, z];
+} 
 
 const Character = (props) => {
   // character is a sphere
   const [ref, api] = useSphere(() => ({
     mass: 1,
     type: "Dynamic",
-    position: [0, 0, 0],
-    ...props
+    position: props.initPos
   }));
   // state to handle character movement
   const [movement, setMovement] = useState({
@@ -38,12 +43,8 @@ const Character = (props) => {
     right: false
   });
   const { camera } = useThree();
-  const velocity = useRef([0, 0, 0]);
 
   useEffect(() => {
-    // for y velocity
-    api.velocity.subscribe(v => velocity.current = v);
-    
     // movement handlers
     const handleKeyDown = (e) => {
       setMovement((m) => ({
@@ -56,13 +57,37 @@ const Character = (props) => {
           ...m,
           [move(e.code)]: false
       }));
+      // spacebar to interact with blogs
+      if (e.code === "Space") {
+        const [x, z] = getXZ(camera.position);
+        const onBlog = props.blogs.find(blog => (blog.x === x && blog.z === z));
+        if (onBlog) {
+          console.log(onBlog);
+        }
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
 
+    // update backend with user's new position every 3 secs
+    let timeout;
+    const updatePos = (x, z) => {
+      const [new_x, new_z] = getXZ(camera.position);
+      if (new_x !== x || new_z !== z) {
+        fetchGraphql(`
+          mutation {
+            updateUserPosition(position: [${Math.round(new_x)}, ${Math.round(new_z)}])
+          }
+        `);
+      }
+      timeout = setTimeout(() => updatePos(new_x, new_z), 3000);
+    };
+    timeout = setTimeout(() => updatePos(ref.current.position.x, ref.current.position.z), 3000);
+
     return (() => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
+      clearTimeout(timeout);
     });
   }, []);
 
@@ -75,8 +100,16 @@ const Character = (props) => {
     const sideVector = new Vector3(movement.left - movement.right, 0, 0);
     const direction = new Vector3();
     direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(SPEED).applyEuler(camera.rotation);
-    // set velocity based on calculated movement
-    api.velocity.set(direction.x, velocity.current[1], direction.z);
+    api.velocity.set(direction.x, 0, direction.z);
+
+    // update interface based on user's current position
+    const [x, z] = getXZ(camera.position);
+    const blog = props.blogs.find(blog => (blog.x === x && blog.z === z));
+    if (blog) {
+      props.updateInterface(blog.title, blog.author.name)
+    } else {
+      props.updateInterface("", "");
+    }
   });
 
   return (

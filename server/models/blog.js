@@ -18,6 +18,14 @@ const blogSchema = new Schema({
     date: {
         type: Date,
         required: true
+    },
+    x: {
+        type: Number,
+        required: true
+    },
+    z: {
+        type: Number,
+        required: true
     }
 });
 

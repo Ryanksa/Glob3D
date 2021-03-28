@@ -22,7 +22,6 @@ const Vinland = (props) => {
       position: [0,0,0],
       rotation: [-Math.PI/2, 0, 0]
     }));
-    const pos = props.position;
 
     return(
       <group position={props.position}>
