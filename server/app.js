@@ -31,8 +31,7 @@ app.get('/subscribe/blogs/', isAuthenticated, function(req, res, next) {
 app.use('/graphql', isAuthenticated, graphqlHTTP((req, res) => ({
     schema: graphqlSchema,
     rootValue: graphqlResolver,
-    context: { req, res }, 
-    graphiql: true
+    context: { req, res }
 })));
 
 const PORT = process.env.PORT || config.port;
