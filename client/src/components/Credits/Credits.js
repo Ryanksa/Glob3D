@@ -19,6 +19,7 @@ const Credits = () => (
         <li>3D model <a href="https://skfb.ly/6UrTV">Low poly Tree Trunk</a> made by Anskar is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>.</li>
         <li>3D model <a href="https://skfb.ly/6WWZQ">Low poly Cliff</a> made by Anskar is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>.</li>
         <li>3D model <a href="https://skfb.ly/6WtsA">Low Poly Flowers</a> made by Anskar is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>.</li>
+        <li>3D model <a href="https://skfb.ly/6TB6K">Vladivostok low planet</a> by stveega228 is licensed under <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>.</li>
       </ul>
     </div>
   </div>

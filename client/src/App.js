@@ -6,6 +6,7 @@ import Login from './components/Login/Login';
 import Signout from './components/Signout/Signout';
 import Credits from './components/Credits/Credits';
 import World from './components/World/World';
+import Landing from './components/Landing/Landing';
 import {
   BrowserRouter as Router,
   Switch,
@@ -14,7 +15,7 @@ import {
 import Signup from './components/Signup/Signup';
 
 import React from 'react';
-import UserContext from './contexts/userContext'; 
+import UserContext from './contexts/userContext';
 
 const SESSION_USER_KEY = `GLOB3D_USER`;
 
@@ -72,6 +73,9 @@ class App extends React.Component {
           </div>
           <div className="page-wrapper">
             <Switch>
+              <Route path="/" exact>
+                <Landing />
+              </Route>
               <Route path="/signup">
                 <Signup/>
               </Route>

@@ -71,7 +71,7 @@ const Blogs3D = (props) => {
   return (<>
     {initPos && <Character initPos={initPos} blogs={blogs} updateInterface={props.updateInterface}/>}
     {blogs.map((blog) => (
-      <Blog position={[blog.x, 0, blog.z]} />
+      <Blog key={blog._id} position={[blog.x, 0, blog.z]} />
     ))}
   </>);
 };
