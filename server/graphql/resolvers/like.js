@@ -1,15 +1,36 @@
 const Like = require('../../models/like');
 const User = require('../../models/user');
 const Blog = require('../../models/blog');
+const { validateId, sanitizeString } = require('../../utils/validate');
 
 module.exports = {
-    likes: function({ first, after, userId, blogId }, { req }) {
-        if (!req.isAuth) throw new Error("Unauthorized access");
-        if (first > 20) throw new Error("Cannot query more than 20 results");
+    likes: function({ first, after, userId, blogId }, { req, res }) {
+        if (!req.isAuth) {
+            res.status(401);
+            throw new Error("Unauthorized access");
+        } else if (first > 20) {
+            res.status(400);
+            throw new Error("Cannot query more than 20 results");
+        } else if (after < 0) {
+            res.status(400);
+            throw new Error("Cannot skip by a negative amount");
+        }
         
         let filter = {};
-        if (userId) filter.user = userId;
-        if (blogId) filter.blog = blogId;
+        if (userId) {
+            if (!validateId(userId)) {
+                res.status(400);
+                throw new Error("Invalid user ID");
+            }
+            filter.user = sanitizeString(userId);
+        }
+        if (blogId) {
+            if (!validateId(blogId)) {
+                res.status(400);
+                throw new Error("Invalid blog ID");
+            }
+            filter.blog = sanitizeString(blogId);
+        }
 
         return Like.find(filter).skip(after).limit(first)
             .populate("user")
@@ -26,11 +47,27 @@ module.exports = {
                 throw err;
             });
     },
-    numLikes: function({ userId, blogId }, { req }) {
-        if (!req.isAuth) throw new Error("Unauthorized access");
+    numLikes: function({ userId, blogId }, { req, res }) {
+        if (!req.isAuth) {
+            res.status(401);
+            throw new Error("Unauthorized access");
+        }
+        
         let filter = {};
-        if (userId) filter.user = userId;
-        if (blogId) filter.blog = blogId;
+        if (userId) {
+            if (!validateId(userId)) {
+                res.status(400);
+                throw new Error("Invalid user ID");
+            }
+            filter.user = sanitizeString(userId);
+        }
+        if (blogId) {
+            if (!validateId(blogId)) {
+                res.status(400);
+                throw new Error("Invalid blog ID");
+            }
+            filter.blog = sanitizeString(blogId);
+        }
 
         return Like.countDocuments(filter)
             .then(function(count) {
@@ -40,47 +77,83 @@ module.exports = {
                 throw err;
             })
     },
-    likeBlog: function({ blogId }, { req }) {
-        if (!req.isAuth) throw new Error("Unauthorized access");
+    likeBlog: function({ blogId }, { req, res }) {
+        if (!req.isAuth) {
+            res.status(401);
+            throw new Error("Unauthorized access");
+        }
+        if (!validateId(blogId)) {
+            res.status(400);
+            throw new Error("Invalid blog ID");
+        }
+        const cleanedBlogId = sanitizeString(blogId);
+
         return User.findOne({ _id: req.userId })
             .then(function(user) {
-                if (!user) throw new Error(`User with id ${req.userId} does not exist`);
-                return Blog.findOne({ _id: blogId });
+                if (!user) {
+                    res.status(404);
+                    throw new Error(`User with id ${req.userId} does not exist`);
+                }
+                return Blog.findOne({ _id: cleanedBlogId });
             })
             .then(function(blog) {
-                if (!blog) throw new Error(`Blog with id ${blogId} does not exist`);
-                return Like.findOne({ user: req.userId, blog: blogId });
+                if (!blog) {
+                    res.status(404);
+                    throw new Error(`Blog with id ${cleanedBlogId} does not exist`);
+                }
+                return Like.findOne({ user: req.userId, blog: cleanedBlogId });
             })
             .then(function(isLiked) {
-                if (isLiked) throw new Error(`User ${req.userId} already liked blog ${blogId}`);
+                if (isLiked) {
+                    res.status(400);
+                    throw new Error(`User ${req.userId} already liked blog ${cleanedBlogId}`);
+                }
                 const like = new Like({
                     user: req.userId,
-                    blog: blogId,
+                    blog: cleanedBlogId,
                     date: new Date()
                 });
                 return like.save();
             })
             .then(function(like) {
-                return `User ${req.userId} liked blog ${blogId}`;
+                return `User ${req.userId} liked blog ${cleanedBlogId}`;
             })
             .catch(function(err) {
                 throw err;
             });
     },
-    unlikeBlog: function({ blogId }, { req }) {
-        if (!req.isAuth) throw new Error("Unauthorized access");
+    unlikeBlog: function({ blogId }, { req, res }) {
+        if (!req.isAuth) {
+            res.status(401);
+            throw new Error("Unauthorized access");
+        }
+        if (!validateId(blogId)) {
+            res.status(400);
+            throw new Error("Invalid blog ID");
+        }
+        const cleanedBlogId = sanitizeString(blogId);
+
         return User.findOne({ _id: req.userId })
             .then(function(user) {
-                if (!user) throw new Error(`User with id ${req.userId} does not exist`);
-                return Blog.findOne({ _id: blogId });
+                if (!user) {
+                    res.status(404);
+                    throw new Error(`User with id ${req.userId} does not exist`);
+                }
+                return Blog.findOne({ _id: cleanedBlogId });
             })
             .then(function(blog) {
-                if (!blog) throw new Error(`Blog with id ${blogId} does not exist`);
-                return Like.deleteOne({ user: req.userId, blog: blogId });
+                if (!blog) {
+                    res.status(404);
+                    throw new Error(`Blog with id ${cleanedBlogId} does not exist`);
+                }
+                return Like.deleteOne({ user: req.userId, blog: cleanedBlogId });
             })
             .then(function(result) {
-                if (result.deletedCount < 1) throw new Error(`User ${req.userId} has not liked blog ${blogId}`);
-                return `User ${req.userId} unliked blog ${blogId}`;
+                if (result.deletedCount < 1) {
+                    res.status(400);
+                    throw new Error(`User ${req.userId} has not liked blog ${cleanedBlogId}`);
+                }
+                return `User ${req.userId} unliked blog ${cleanedBlogId}`;
             })
             .catch(function(err) {
                 throw err;

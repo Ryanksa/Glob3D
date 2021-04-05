@@ -1,4 +1,5 @@
-const World = require('./models/world');
+const World = require('../models/world');
+const { runTerrainListeners } = require('../listeners/terrainListeners');
 
 module.exports = {
     initWorld: function(msg) {
@@ -48,6 +49,7 @@ module.exports = {
                 return world.save();
             })
             .then(function() {
+                runTerrainListeners();
                 console.log("New terrain generated");
             })
             .catch(function(err) {

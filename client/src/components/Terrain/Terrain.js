@@ -20,20 +20,33 @@ const Terrain = () => {
   const [len, setLen] = useState(0);
 
   useEffect(() => {
-    fetchGraphql(`
-      query {
-        world {
-          terrain
-          size
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    (function updateWorld(longPoll) {
+      fetchGraphql(`
+        query {
+          world(long: ${longPoll}) {
+            terrain
+            size
+          }
         }
-      }
-    `)
-    .then((res) => { return res.json() })
-    .then((data) => {
-      if (data.data.world) {
-        setTerrainMatrix(data.data.world.terrain);
-        setLen(Math.sqrt(data.data.world.size));  
-      }
+      `, signal)
+      .then((res) => { return res.json() })
+      .then((data) => {
+        if (data.data.world) {
+          setTerrainMatrix(data.data.world.terrain);
+          setLen(Math.sqrt(data.data.world.size));  
+        }
+        updateWorld(true);
+      })
+      .catch(() => {
+        if (!signal.aborted) updateWorld(true);
+      });
+    })(false);
+
+    return (() => {
+      abortController.abort();
     });
   }, []);
 

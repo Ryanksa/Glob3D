@@ -18,14 +18,12 @@ const userSchema = new Schema({
         type: Date,
         required: true
     },
-    x: {
-        type: Number,
-        required: true
-    },
-    z: {
-        type: Number,
+    position: {
+        type: [Number],
         required: true
     }
 });
+// 50 * (9 + 2000) = 100450 (i.e. allow terrain to expand 1000 times)
+userSchema.index({ position: '2d' }, { min: -100450, max: 100450 })
 
 module.exports = mongoose.model('User', userSchema);

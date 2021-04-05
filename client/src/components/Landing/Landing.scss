@@ -2,17 +2,20 @@
     // 70px is the height of the topbar
     height: calc(100vh - 70px) !important;
     background-color: rgb(156, 176, 194);
+    position: absolute;
 }
 
 .landing-text-container {
     height: 100%;
     text-align: center;
     color: white;
+    position: relative;
+    top: calc(50% - 54px - 2rem - 25px);
 }
 
 .landing-text-content {
     font-size: 54px;
-    margin: 10% auto 4rem auto;
+    margin: 0 auto 4rem auto;
     width: 700px;
 }
 

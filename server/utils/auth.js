@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
-const config = require('./config');
+const config = require('../config');
 
 let isAuthenticated = function(req, res, next) {
     req.isAuth = false;

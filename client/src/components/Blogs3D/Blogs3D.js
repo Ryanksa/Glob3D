@@ -24,23 +24,29 @@ const Blogs3D = (props) => {
   const [initPos, setInitPos] = useState(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
     // grab the user's initial position
     fetchGraphql(`
       query {
         getUserPosition
       }
-    `)
+    `, signal)
     .then((res) => res.json())
     .then((data) => {
-      const pos = (data && data.data) ? data.data.getUserPosition : [0, 0, 0];
+      const pos = (data && data.data) ? data.data.getUserPosition : [0, 0];
       setInitPos([pos[0], 0, pos[1]]);
+    })
+    .catch((err) => {
+      setInitPos([0, 0, 0]);
     });
 
-    // poll every 6 secs for a new set of blogs around the user
-    const updateBlogs = () => {
+    // long poll for a new set of blogs near the user
+    (function updateBlogs(longPoll) {
       fetchGraphql(`
         query {
-          blogsNearUser(limit: 20) {
+          blogsNearUser(limit: 20, long: ${longPoll}) {
             _id
             title
             content
@@ -49,29 +55,34 @@ const Blogs3D = (props) => {
               email
             }
             date
-            x
-            z
+            position
           }
         }
-      `)
+      `, signal)
       .then((res) => res.json())
       .then((data) => {
-        const newBlogs = (data && data.data) ? data.data.blogsNearUser : [];
-        setBlogs(newBlogs);
+        const newBlogs = (data && data.data) ? data.data.blogsNearUser : null;
+        if (newBlogs) setBlogs(newBlogs);
+        updateBlogs(true);
+      })
+      .catch(() => {
+        if (!signal.aborted) updateBlogs(true);
       });
-    }
-    updateBlogs();
-    setInterval(updateBlogs, 6000);
+    })(false);
     
     return () => {
-      clearInterval(updateBlogs);
+      abortController.abort();
     }
   }, []);
 
   return (<>
-    {initPos && <Character initPos={initPos} blogs={blogs} updateInterface={props.updateInterface}/>}
+    {initPos && 
+    <Character initPos={initPos} blogs={blogs} 
+              updateInterface={props.updateInterface} 
+              setOnLeave={props.setOnLeave}/>}
+    
     {blogs.map((blog) => (
-      <Blog key={blog._id} position={[blog.x, 0, blog.z]} />
+      <Blog key={blog._id} position={[blog.position[0], 0, blog.position[1]]} />
     ))}
   </>);
 };

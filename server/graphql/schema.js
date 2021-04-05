@@ -7,8 +7,7 @@ module.exports = buildSchema(`
         password: String
         name: String!
         date: String!
-        x: Int
-        z: Int
+        position: [Int!]!
     }
 
     type Blog {
@@ -17,8 +16,7 @@ module.exports = buildSchema(`
         content: String!
         author: User!
         date: String!
-        x: Int
-        z: Int
+        position: [Int!]!
     }
 
     type Like {
@@ -51,7 +49,7 @@ module.exports = buildSchema(`
         getUserPosition: [Int!]!
         blogs(first: Int!, after: Int!, authorId: ID): [Blog!]!
         numBlogs(authorId: ID): Int!
-        blogsNearUser(limit: Int!): [Blog!]!
+        blogsNearUser(limit: Int!, long: Boolean): [Blog!]
         likes(first: Int!, after: Int!, userId: ID, blogId: ID): [Like!]!
         numLikes(userId: ID, blogId: ID): Int!
         comments(first: Int!, after: Int!, userId: ID, blogId: ID): [Comment!]!
@@ -60,7 +58,7 @@ module.exports = buildSchema(`
         numFollows(followerId: ID, followedId: ID): Int!
         signin(email: String!, password: String!): User!
         signout: Boolean!
-        world: World
+        world(long: Boolean): World
     }
 
     type RootMutation {

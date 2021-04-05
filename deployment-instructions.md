@@ -4,19 +4,14 @@
     ```
     cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 128 | head -n 1
     ```
-3. Change all instances of domain.name in data/nginx/app.conf to a registered domain name
-4. Update email and domain.name in init-letsencrypt.sh
-5. Run these following commands to build the docker images:
+3. Run these following commands to build the docker images:
     ```
     docker build -t glob3d-client ./client/
     docker build -t glob3d-server ./server/
     ```
-6. Run init-letsencrypt.sh to set up SSL certificates:
-    ```
-    chmod +x init-letsencrypt.sh
-    sudo ./init-letsencrypt.sh
-    ```
-7. To start the app:
+4. Update all domain.name placeholders in ./nginx/app.conf with the registered domain name(s)
+5. Update all domain.name and example@mail.com placeholders in ./docker-compose.yml with the registered doamin name(s) and email.
+6. To start the app:
     ```
     docker-compose up -d
     ```

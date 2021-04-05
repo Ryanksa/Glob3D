@@ -9,5 +9,6 @@ COPY ./ ./
 
 ENV PORT=5000
 ENV MONGO_URI="mongodb://mongo:27017/glob3d"
+ENV HTTPS=true
 EXPOSE 5000
 CMD ["node", "app.js"]

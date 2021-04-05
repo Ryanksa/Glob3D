@@ -8,7 +8,7 @@ import { useFrame, useThree } from 'react-three-fiber';
 import { useSphere } from 'use-cannon';
 import { Vector3 } from 'three';
 
-// code for character movement and camera referenced from https://www.youtube.com/watch?v=Lc2JvBXMesY
+// code for character movement adapted from https://www.youtube.com/watch?v=Lc2JvBXMesY
 const SPEED = 30;
 const move = (key) => {
   switch(key) {
@@ -45,7 +45,10 @@ const Character = (props) => {
   const { camera } = useThree();
 
   useEffect(() => {
-    // movement handlers
+    const abortController = new AbortController();
+    const signal = abortController.signal;
+
+    // keyboard input handlers
     const handleKeyDown = (e) => {
       setMovement((m) => ({
           ...m,
@@ -58,9 +61,9 @@ const Character = (props) => {
           [move(e.code)]: false
       }));
       // spacebar to interact with blogs
-      if (e.code === "Space") {
+      if (e.code === "Space" && camera && camera.position) {
         const [x, z] = getXZ(camera.position);
-        const onBlog = props.blogs.find(blog => (blog.x === x && blog.z === z));
+        const onBlog = props.blogs.find(blog => (blog.position[0] === x && blog.position[1] === z));
         if (onBlog) {
           console.log(onBlog);
         }
@@ -69,24 +72,45 @@ const Character = (props) => {
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
 
-    // update backend with user's new position every 3 secs
+    // update backend with user's new position every 10 secs (if user is moving)
     let timeout;
     const updatePos = (x, z) => {
-      const [new_x, new_z] = getXZ(camera.position);
-      if (new_x !== x || new_z !== z) {
-        fetchGraphql(`
+      if (camera && camera.position) {
+        const [new_x, new_z] = getXZ(camera.position);
+        if (new_x !== x || new_z !== z) {
+          fetchGraphql(`
+            mutation {
+              updateUserPosition(position: [${new_x}, ${new_z}])
+            }
+          `, signal)
+          .then(() => {
+            timeout = setTimeout(() => updatePos(new_x, new_z), 10000);
+          })
+          .catch(() => {
+            if (!signal.aborted) timeout = setTimeout(() => updatePos(new_x, new_z), 10000);
+          });
+        }
+      }
+    };
+    timeout = setTimeout(() => updatePos(props.initPos[0], props.initPos[2]), 10000);
+
+    // update user's final position before leaving page
+    props.setOnLeave(() => {
+      if (camera && camera.position) {
+        const [fin_x, fin_z] = getXZ(camera.position);
+        return fetchGraphql(`
           mutation {
-            updateUserPosition(position: [${Math.round(new_x)}, ${Math.round(new_z)}])
+            updateUserPosition(position: [${fin_x}, ${fin_z}])
           }
         `);
       }
-      timeout = setTimeout(() => updatePos(new_x, new_z), 3000);
-    };
-    timeout = setTimeout(() => updatePos(ref.current.position.x, ref.current.position.z), 3000);
-
+    });
+    
     return (() => {
+      // unmount handlers and timeouts
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
+      abortController.abort();
       clearTimeout(timeout);
     });
   }, []);
@@ -104,7 +128,7 @@ const Character = (props) => {
 
     // update interface based on user's current position
     const [x, z] = getXZ(camera.position);
-    const blog = props.blogs.find(blog => (blog.x === x && blog.z === z));
+    const blog = props.blogs.find(blog => (blog.position[0] === x && blog.position[1] === z));
     if (blog) {
       props.updateInterface(blog.title, blog.author.name)
     } else {
