@@ -19,3 +19,7 @@
     ```
     docker-compose down
     ```
+7. An issue where /world does not load properly seems to occur when docker-compose runs for 2-3 days. Set up a cronjob to run docker-compose restart every day.
+    ```
+    0 0 1 * * /path/to/project/root/docker-compose restart
+    ```

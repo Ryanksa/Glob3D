@@ -1,5 +1,10 @@
 # Project Proposal: Glob3D
 
+## URL, Documentation, and Video
+- URL to application: https://glob3d.tk
+- API Documentation: https://github.com/UTSCC09/project-timetobrainstorm/blob/master/server/doc.md
+- Demo Video: 
+
 ## Project Members
 
 - Hung Jen (Ryan) Lin
