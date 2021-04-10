@@ -5,10 +5,10 @@ const User = require('../../models/user');
 const Blog = require('../../models/blog');
 const config = require('../../config');
 const { runBlogListeners } = require('../../listeners/blogListeners');
-const { validateEmail, validatePassword, validatePosition, sanitizeString } = require('../../utils/validate');
+const { validateId, validateEmail, validatePassword, validatePosition, sanitizeString } = require('../../utils/validate');
 
 module.exports = {
-    users: function({ first, after }, { req, res }) {
+    users: function({ first, after, userId }, { req, res }) {
         if (!req.isAuth) {
             res.status(401);
             throw new Error("Unauthorized access");
@@ -20,7 +20,16 @@ module.exports = {
             throw new Error("Cannot skip by a negative amount");
         }
 
-        return User.find().skip(after).limit(first)
+        let filter = {};
+        if (userId) {
+            if (!validateId(userId)) {
+                res.status(400);
+                throw new Error("Invalid user ID");
+            }
+            filter._id = sanitizeString(userId);
+        }
+
+        return User.find(filter).skip(after).limit(first)
             .then(function(users) {
                 return users.map(function(user) {
                     user.password = null;

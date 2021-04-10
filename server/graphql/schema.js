@@ -45,14 +45,14 @@ module.exports = buildSchema(`
     }
 
     type RootQuery {
-        users(first: Int!, after: Int!): [User!]!
+        users(first: Int!, after: Int!, userId: ID): [User!]!
         getUserPosition: [Int!]!
-        blogs(first: Int!, after: Int!, authorId: ID): [Blog!]!
+        blogs(first: Int!, after: Int!, blogId: ID, authorId: ID): [Blog!]!
         numBlogs(authorId: ID): Int!
         blogsNearUser(limit: Int!, long: Boolean): [Blog!]
         likes(first: Int!, after: Int!, userId: ID, blogId: ID): [Like!]!
         numLikes(userId: ID, blogId: ID): Int!
-        comments(first: Int!, after: Int!, userId: ID, blogId: ID): [Comment!]!
+        comments(first: Int!, after: Int!, commentId: ID, userId: ID, blogId: ID): [Comment!]!
         numComments(userId: ID, blogId: ID): Int!
         follows(first: Int!, after: Int!, followerId: ID, followedId: ID): [Follow!]!
         numFollows(followerId: ID, followedId: ID): Int!

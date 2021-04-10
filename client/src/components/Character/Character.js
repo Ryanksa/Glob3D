@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './Character.scss';
 import Camera from './Camera';
@@ -43,6 +43,7 @@ const Character = (props) => {
     right: false
   });
   const { camera } = useThree();
+  const blogId = useRef(null);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -61,12 +62,19 @@ const Character = (props) => {
           [move(e.code)]: false
       }));
       // spacebar to interact with blogs
-      if (e.code === "Space" && camera && camera.position) {
-        const [x, z] = getXZ(camera.position);
-        const onBlog = props.blogs.find(blog => (blog.position[0] === x && blog.position[1] === z));
-        if (onBlog) {
-          console.log(onBlog);
-        }
+      if (e.code === "Space" && blogId.current) {
+        const [x, z] = getXZ(ref.current.position);
+        fetchGraphql(`
+          mutation {
+            updateUserPosition(position: [${x}, ${z}])
+          }
+        `)
+        .then(() => {
+          window.location.replace(`/blogScreen/${blogId.current}`);
+        })
+        .catch(() => {
+          window.location.replace(`/blogScreen/${blogId.current}`);
+        });
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -130,8 +138,10 @@ const Character = (props) => {
     const [x, z] = getXZ(camera.position);
     const blog = props.blogs.find(blog => (blog.position[0] === x && blog.position[1] === z));
     if (blog) {
-      props.updateInterface(blog.title, blog.author.name)
+      if (blogId.current !== blog._id) blogId.current = blog._id;
+      props.updateInterface(blog.title, blog.author.name);
     } else {
+      if (blogId.current) blogId.current = null;
       props.updateInterface("", "");
     }
   });

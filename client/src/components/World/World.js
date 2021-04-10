@@ -19,7 +19,7 @@ const World = () => {
     if (blogTitle !== title) setBlogTitle(title);
     if (blogAuthor !== author) setBlogAuthor(author);
   };
-  // store callback for updating user's final position before /world
+  // store callback for updating user's final position before leaving /world
   let onLeave = () => {
     return true;
   };

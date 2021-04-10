@@ -45,7 +45,7 @@ const Interface = (props) => {
       <div className="curr-blog-container">
         <div className="curr-blog-title">{props.blogTitle}</div>
         <div className="curr-blog-author">By {props.blogAuthor}</div>
-        <div className="curr-blog-instructions">Press spacebar to interact</div>
+        <div className="curr-blog-instructions">Press spacebar to open</div>
       </div>}
     </>
   );

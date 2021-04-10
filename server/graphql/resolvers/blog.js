@@ -37,7 +37,7 @@ const updateUsers = (blogPosition) => {
 };
 
 module.exports = {
-    blogs: function({ first, after, authorId }, { req, res }) {
+    blogs: function({ first, after, blogId, authorId }, { req, res }) {
         if (!req.isAuth) {
             res.status(401);
             throw new Error("Unauthorized access");
@@ -50,6 +50,13 @@ module.exports = {
         }
 
         let filter = {};
+        if (blogId) {
+            if (!validateId(blogId)) {
+                res.status(400);
+                throw new Error("Invalid blog ID");
+            }
+            filter._id = sanitizeString(blogId);
+        }
         if (authorId) {
             if (!validateId(authorId)) {
                 res.status(400);

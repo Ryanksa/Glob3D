@@ -4,7 +4,7 @@ const Blog = require('../../models/blog');
 const { validateId, sanitizeString } = require('../../utils/validate');
 
 module.exports = {
-    comments: function({ first, after, userId, blogId }, { req, res }) {
+    comments: function({ first, after, commentId, userId, blogId }, { req, res }) {
         if (!req.isAuth) {
             res.status(401);
             throw new Error("Unauthorized access");
@@ -17,6 +17,13 @@ module.exports = {
         }
         
         let filter = {};
+        if (commentId) {
+            if (!validateId(commentId)) {
+                res.status(400);
+                throw new Error("Invalid comment ID");
+            }
+            filter._id = sanitizeString(commentId);
+        }
         if (userId) {
             if (!validateId(userId)) {
                 res.status(400);
