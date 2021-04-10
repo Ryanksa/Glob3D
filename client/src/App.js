@@ -26,20 +26,22 @@ class App extends React.Component {
 
     this.state = {
       user: {},
-      error: ""
+      errors: []
     };
     
     this.updateUser = this.updateUser.bind(this);
-    this.updateError = this.updateError.bind(this);
+    this.handleError = this.handleError.bind(this);
+    this.removeError = this.removeError.bind(this);
   }
 
   componentDidMount() {
     // attempt to restore user session
     try {
-      const savedUser = JSON.parse(sessionStorage.getItem(SESSION_USER_KEY));
+      const savedUser = JSON.parse(localStorage.getItem(SESSION_USER_KEY));
+      console.log(savedUser);
       if('email' in savedUser && 'name' in savedUser) this.setState({ user: savedUser });
     } catch(e) {
-      sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify({}));
+      localStorage.setItem(SESSION_USER_KEY, JSON.stringify({}));
     }
   }
 
@@ -47,12 +49,22 @@ class App extends React.Component {
     this.setState({
       user: user
     });
-    sessionStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
+    localStorage.setItem(SESSION_USER_KEY, JSON.stringify(user));
   }
 
-  updateError(error) {
+  handleError(error) {
     this.setState({
-      error: error
+      errors: [...this.state.errors, error]
+    });
+  }
+
+  removeError(error) {
+    // https://stackoverflow.com/a/44433050
+    const newErrors = [...this.state.errors];
+    newErrors.splice(this.state.errors.indexOf(error), 1)
+
+    this.setState({
+      errors: newErrors
     });
   }
 
@@ -60,8 +72,10 @@ class App extends React.Component {
     // define context bundle to pass down to children
     const context = {
       user: this.state.user,
+      errors: this.state.errors,
       updateUser: this.updateUser,
-      updateError: this.updateError
+      handleError: this.handleError,
+      removeError: this.removeError
     };
 
     return (
@@ -69,7 +83,7 @@ class App extends React.Component {
         <UserContext.Provider value={context}>
           <div className="App">
             <Header/>
-            { this.state.error !== "" && <Error error={this.state.error}></Error> }
+            <Error />
           </div>
           <div className="page-wrapper">
             <Switch>

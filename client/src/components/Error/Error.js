@@ -10,19 +10,29 @@ class Error extends React.Component {
     super(props);
   }
 
+  renderErrors = (context) => {
+    let renderedErrors = [];
+    const errors = context.errors;
+
+    errors.forEach((error, i) => {
+      renderedErrors.push(
+        <Alert severity="error" onClose={() => {
+          console.log("removing " + error);
+          context.removeError(error);
+        }}>
+          { error }
+        </Alert>
+      );
+    });
+
+    return renderedErrors;
+  };
+
   render() {
     return (
       <div className="error-wrapper">
         <UserContext.Consumer>
-          {
-            (context) => {
-              return <Alert severity="error" onClose={() => {
-                context.updateError("");
-              }}>
-                {this.props.error}
-              </Alert>
-            }
-          }
+          { (context) => this.renderErrors(context) }
         </UserContext.Consumer>
       </div>
     );

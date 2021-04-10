@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Terrain.scss';
 
-import { fetchGraphql } from '../../fetchService';
+import { fetchGraphql } from '../../utils/fetchService';
 import Wasteland from './Wasteland';
 import BluePeriod from './BluePeriod';
 import AutumnFalls from './AutumnFalls';

@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Login.scss';
 
-import UserContext from '../../contexts/userContext';
-
 import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
-
 import { Redirect } from 'react-router';
+
+import UserContext from '../../contexts/userContext';
+import { login as loginHelper } from '../../utils/auth';
 
 class Login extends React.Component {
   static contextType = UserContext;
@@ -30,26 +30,17 @@ class Login extends React.Component {
   }
 
   login() {
-    fetch('/graphql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: `
-        query {
-          signin(email:"${this.state.email}", password:"${this.state.password}") {
-            email
-            name
-          }
-        }` 
-      }),
-      credentials: "include"
-    }).then((res) => {
+    loginHelper(this.state.email, this.state.password)
+    .then((res) => {
       return res.json();
     }).then((res) => {
       if(res.data) {
         this.context.updateUser(res.data.signin);
         this.setState({ redirect: true });
       }
-    });
+    }).catch((res) => {
+      this.context.handleError(`Something went wrong when signing in! Please try again.`);
+    });;
   }
   
   // handling user input code adapted from https://stackoverflow.com/a/43746799

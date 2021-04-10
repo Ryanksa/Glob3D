@@ -4,7 +4,7 @@ import './Blogs3D.scss';
 import blog from '../../assets/blog3d.png';
 import { useLoader } from 'react-three-fiber';
 import { TextureLoader } from 'three';
-import { fetchGraphql } from '../../fetchService';
+import { fetchGraphql } from '../../utils/fetchService';
 import Character from '../Character/Character';
 
 const Blog = (props) => {

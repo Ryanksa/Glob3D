@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Signout.scss';
 
-import { Button, FormControl, Input, InputLabel } from '@material-ui/core';
 import { Redirect } from 'react-router';
 
 import UserContext from '../../contexts/userContext'; 
+import { signout as signoutHelper } from '../../utils/auth';
 
 class Signout extends React.Component {
   static contextType = UserContext;
@@ -20,21 +20,14 @@ class Signout extends React.Component {
   }
 
   componentDidMount() {
-    fetch('/graphql', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: `
-        query {
-          signout
-        }` 
-      }),
-      credentials: "include"
-    }).then((res) => {
+    signoutHelper().then((res) => {
       return res.json();
     }).then((res) => {
       this.context.updateUser({});
       this.setState({ redirect: true });
-    });
+    }).catch((res) => {
+      this.context.handleError(`Something went wrong when signing out! Please try again.`);
+    });;
   }
 
   render() {

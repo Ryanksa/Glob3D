@@ -31,3 +31,7 @@
     color: rgb(143, 143, 255);
     background: white;
 }
+
+.landing-text-button:not(:last-child) {
+    margin-right: 10px;
+}

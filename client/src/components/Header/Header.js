@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Header.scss';
 
+import { isLoggedIn } from '../../utils/auth';
 import { Link } from "react-router-dom";
 import UserContext from '../../contexts/userContext';
 
@@ -18,7 +19,7 @@ const Header = () => (
       <UserContext.Consumer>
         {
           (context) => {
-            if(Object.keys(context.user).length > 0) {
+            if(isLoggedIn(context.user)) {
               return <Link className="header-link" to="/signout">Signout</Link>
             } else {
               return (

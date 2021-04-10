@@ -2,4 +2,9 @@
     position: absolute;
     right: 50px;
     bottom: 50px;
+    z-index: 999;
+
+    .MuiAlert-root:not(:first-child) {
+      margin-top: 10px;
+    }
 }

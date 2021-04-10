@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './Character.scss';
 import Camera from './Camera';
-import { fetchGraphql } from '../../fetchService';
+import { fetchGraphql } from '../../utils/fetchService';
 
 import { useFrame, useThree } from 'react-three-fiber';
 import { useSphere } from 'use-cannon';
