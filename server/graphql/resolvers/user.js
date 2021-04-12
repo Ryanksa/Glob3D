@@ -5,19 +5,17 @@ const User = require('../../models/user');
 const Blog = require('../../models/blog');
 const config = require('../../config');
 const { runBlogListeners } = require('../../listeners/blogListeners');
-const { validateId, validateEmail, validatePassword, validatePosition, sanitizeString } = require('../../utils/validate');
+const { validateId, validateEmail, validatePassword, validatePosition, validateFirstAfter, sanitizeString } = require('../../utils/validate');
 
 module.exports = {
     users: function({ first, after, userId }, { req, res }) {
         if (!req.isAuth) {
             res.status(401);
             throw new Error("Unauthorized access");
-        } else if (first > 20) {
+        }
+        if (!validateFirstAfter(first, after)) {
             res.status(400);
-            throw new Error("Cannot query more than 20 results");
-        } else if (after < 0) {
-            res.status(400);
-            throw new Error("Cannot skip by a negative amount");
+            throw new Error("Invalid first or after range: 0 < first <= 20, after >= 0");
         }
 
         let filter = {};

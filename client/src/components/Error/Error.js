@@ -17,7 +17,6 @@ class Error extends React.Component {
     errors.forEach((error, i) => {
       renderedErrors.push(
         <Alert severity="error" onClose={() => {
-          console.log("removing " + error);
           context.removeError(error);
         }}>
           { error }

@@ -25,6 +25,9 @@ module.exports = {
     validatePosition: function(position) {
         return (position.length === 2);
     },
+    validateFirstAfter: function(first, after) {
+        return (first <= 20 && first > 0 && after >= 0);
+    },
     sanitizeString: function(string) {
         let clean = sanitize(string);
         clean = DOMPurify.sanitize(clean);

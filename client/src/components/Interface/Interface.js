@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './Interface.scss';
+import { Redirect } from 'react-router-dom';
 
 const Interface = (props) => {
   const [instruct, setInstruct] = useState(true);
+  const [redirect, setRedirect] = useState(false);
 
   const onToggle = () => {
     setInstruct(!instruct);
   };
+  const leaveBlog = () => {
+    setRedirect(true);
+  }
 
+  if(redirect){
+    return <Redirect to='/blogScreen'/>
+  }
   return (
     <>
       <div className="Interface">
@@ -35,7 +43,7 @@ const Interface = (props) => {
           </>}
         </div>
 
-        <div className="write-blog-container">
+        <div onClick={leaveBlog} className="write-blog-container">
           <div className="write-blog-text">Leave a</div>
           <div className="write-blog-icon"></div>
         </div>

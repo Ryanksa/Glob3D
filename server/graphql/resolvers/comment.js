@@ -39,7 +39,7 @@ module.exports = {
             filter.blog = sanitizeString(blogId);
         };
 
-        return Comment.find(filter).skip(after).limit(first)
+        return Comment.find(filter).sort({"date": -1}).skip(after).limit(first)
             .populate("user")
             .populate("blog")
             .then(function(comments) {

@@ -6,6 +6,7 @@ const login = (email, password) => {
       signin(email:"${email}", password:"${password}") {
         email
         name
+        _id
       }
     }
   `)
@@ -13,10 +14,11 @@ const login = (email, password) => {
 
 const signup = (email, password, name) => {
   return fetchGraphql(`
-      mutation {
-          signup(email:"${email}", password:"${password}", name:"${name}") {
+    mutation {
+      signup(email:"${email}", password:"${password}", name:"${name}") {
         email
         name
+        _id
       }
     }
   `)

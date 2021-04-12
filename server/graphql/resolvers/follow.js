@@ -1,18 +1,16 @@
 const Follow = require('../../models/follow');
 const User = require('../../models/user');
-const { validateId, sanitizeString } = require('../../utils/validate');
+const { validateId, validateFirstAfter, sanitizeString } = require('../../utils/validate');
 
 module.exports = {
     follows: function({ first, after, followerId, followedId }, { req, res }) {
         if (!req.isAuth) {
             res.status(401);
             throw new Error("Unauthorized access");
-        } else if (first > 20) {
+        }
+        if (!validateFirstAfter(first, after)) {
             res.status(400);
-            throw new Error("Cannot query more than 20 results");
-        } else if (after < 0) {
-            res.status(400);
-            throw new Error("Cannot skip by a negative amount");
+            throw new Error("Invalid first or after range: 0 < first <= 20, after >= 0");
         }
         
         let filter = {};

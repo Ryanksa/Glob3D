@@ -13,9 +13,12 @@ import {
   Route
 } from "react-router-dom";
 import Signup from './components/Signup/Signup';
+import ReadBlogScreen from './components/ReadBlogScreen/ReadBlogScreen';
+import WriteBlogScreen from './components/WriteBlogScreen/WriteBlogScreen';
 
 import React from 'react';
 import UserContext from './contexts/userContext';
+
 
 const SESSION_USER_KEY = `GLOB3D_USER`;
 
@@ -38,8 +41,7 @@ class App extends React.Component {
     // attempt to restore user session
     try {
       const savedUser = JSON.parse(localStorage.getItem(SESSION_USER_KEY));
-      console.log(savedUser);
-      if('email' in savedUser && 'name' in savedUser) this.setState({ user: savedUser });
+      if('email' in savedUser && 'name' in savedUser && '_id' in savedUser) this.setState({ user: savedUser });
     } catch(e) {
       localStorage.setItem(SESSION_USER_KEY, JSON.stringify({}));
     }
@@ -105,6 +107,13 @@ class App extends React.Component {
               <Route path="/world">
                 <World />
               </Route>
+              <Route exact path="/blogscreen">
+                <WriteBlogScreen/>
+              </Route>
+              <Route exact path="/blogscreen/">
+                <WriteBlogScreen/>
+              </Route>
+              <Route path="/blogscreen/:id" component={ReadBlogScreen} />
             </Switch>
           </div>
         </UserContext.Provider>

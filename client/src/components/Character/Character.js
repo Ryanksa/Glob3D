@@ -13,13 +13,15 @@ const SPEED = 30;
 const move = (key) => {
   switch(key) {
       case "KeyW":
-          return "forward";
+        return "forward";
       case "KeyS":
-          return "backward";
+        return "backward";
       case "KeyA":
-          return "left";
+        return "left";
       case "KeyD":
-          return "right";
+        return "right";
+      default:
+        break;
   }
 }
 const getXZ = (position) => {
@@ -46,9 +48,6 @@ const Character = (props) => {
   const blogId = useRef(null);
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
     // keyboard input handlers
     const handleKeyDown = (e) => {
       setMovement((m) => ({
@@ -61,6 +60,15 @@ const Character = (props) => {
           ...m,
           [move(e.code)]: false
       }));
+      // update user position
+      if (camera && camera.position) {
+        const [new_x, new_z] = getXZ(camera.position);
+        fetchGraphql(`
+          mutation {
+            updateUserPosition(position: [${new_x}, ${new_z}])
+          }
+        `);
+      }
       // spacebar to interact with blogs
       if (e.code === "Space" && blogId.current) {
         const [x, z] = getXZ(ref.current.position);
@@ -79,47 +87,11 @@ const Character = (props) => {
     };
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
-
-    // update backend with user's new position every 10 secs (if user is moving)
-    let timeout;
-    const updatePos = (x, z) => {
-      if (camera && camera.position) {
-        const [new_x, new_z] = getXZ(camera.position);
-        if (new_x !== x || new_z !== z) {
-          fetchGraphql(`
-            mutation {
-              updateUserPosition(position: [${new_x}, ${new_z}])
-            }
-          `, signal)
-          .then(() => {
-            timeout = setTimeout(() => updatePos(new_x, new_z), 10000);
-          })
-          .catch(() => {
-            if (!signal.aborted) timeout = setTimeout(() => updatePos(new_x, new_z), 10000);
-          });
-        }
-      }
-    };
-    timeout = setTimeout(() => updatePos(props.initPos[0], props.initPos[2]), 10000);
-
-    // update user's final position before leaving page
-    props.setOnLeave(() => {
-      if (camera && camera.position) {
-        const [fin_x, fin_z] = getXZ(camera.position);
-        return fetchGraphql(`
-          mutation {
-            updateUserPosition(position: [${fin_x}, ${fin_z}])
-          }
-        `);
-      }
-    });
     
     return (() => {
-      // unmount handlers and timeouts
+      // unmount handlers
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
-      abortController.abort();
-      clearTimeout(timeout);
     });
   }, []);
 

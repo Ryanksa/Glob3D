@@ -6,8 +6,6 @@ import { isLoggedIn } from '../../utils/auth';
 import { Link } from "react-router-dom";
 import UserContext from '../../contexts/userContext';
 
-import logo from '../../assets/logo.svg';
-
 const Header = () => (
   <header className="header">
     <a href="/" className="header-logo-link">

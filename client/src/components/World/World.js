@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import './World.scss';
 import Terrain from '../Terrain/Terrain';
@@ -15,35 +15,14 @@ const World = () => {
   // states to update Interface with the blog user is walking over
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
+
   const updateInterface = (title, author) => {
     if (blogTitle !== title) setBlogTitle(title);
     if (blogAuthor !== author) setBlogAuthor(author);
   };
-  // store callback for updating user's final position before leaving /world
-  let onLeave = () => {
-    return true;
-  };
-  let setOnLeave = (callback) => {
-    onLeave = callback;
-  };
 
   return(
     <>
-      <Prompt when={true} message={() => {
-        if (onLeave instanceof Function) {
-          const exit = onLeave();
-          if (exit instanceof Promise) {
-            return exit
-              .then(() => {
-                return true;
-              }).catch(() => {
-                return true;
-              });
-          }
-        }
-        return true;
-      }}/>
-
       <Interface blogTitle={blogTitle} blogAuthor={blogAuthor}/>
       <Canvas className="World" >
         <Suspense fallback={null}>
@@ -53,7 +32,7 @@ const World = () => {
 
           <Physics gravity={[0, -100, 0]}>
             <Terrain />
-            <Blogs3D updateInterface={updateInterface} setOnLeave={setOnLeave}/>
+            <Blogs3D updateInterface={updateInterface} />
           </Physics>
         </Suspense>
       </Canvas>

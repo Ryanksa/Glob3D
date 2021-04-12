@@ -5,7 +5,7 @@ const Comment = require('../../models/comment');
 const World = require('../../models/world');
 const { generateTerrain } = require('../../utils/worldGeneration');
 const { runBlogListeners, pushBlogListener } = require('../../listeners/blogListeners');
-const { validateId, validatePosition, sanitizeString } = require('../../utils/validate');
+const { validateId, validatePosition, validateFirstAfter, sanitizeString } = require('../../utils/validate');
 
 const updateTerrain = () => {
     // generate more terrain if too many blogs
@@ -41,12 +41,10 @@ module.exports = {
         if (!req.isAuth) {
             res.status(401);
             throw new Error("Unauthorized access");
-        } else if (first > 20) {
+        } 
+        if (!validateFirstAfter(first, after)) {
             res.status(400);
-            throw new Error("Cannot query more than 20 results");
-        } else if (after < 0) {
-            res.status(400);
-            throw new Error("Cannot skip by a negative amount");
+            throw new Error("Invalid first or after range: 0 < first <= 20, after >= 0");
         }
 
         let filter = {};
@@ -106,9 +104,9 @@ module.exports = {
             res.status(401);
             throw new Error("Unauthorized access");
         }
-        if (limit > 20) {
+        if (!validateFirstAfter(limit, 0)) {
             res.status(400);
-            throw new Error("Cannot query more than 20 results");
+            throw new Error("Invalid limit range: 0 < limit <= 20");
         }
 
         const getBlogs = () => {
