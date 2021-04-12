@@ -5,7 +5,6 @@
 - Video showcase: https://youtu.be/ZnGwusp1l_M
 - API Documentation: https://github.com/UTSCC09/project-timetobrainstorm/blob/master/server/doc.md
 - Credits: https://glob3d.tk/credits
-- Demo Video: 
 
 ## Project Members
 
