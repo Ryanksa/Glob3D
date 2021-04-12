@@ -13,6 +13,7 @@ services:
       - html:/usr/share/nginx/html
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    restart: always
 
   letsencrypt-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -27,6 +28,7 @@ services:
       - html:/usr/share/nginx/html
     environment:
       - DEFAULT_EMAIL=example@mail.com
+      restart: always
 
   glob3d-nginx:
     image: nginx:latest

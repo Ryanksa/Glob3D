@@ -19,7 +19,12 @@
     ```
     docker-compose down
     ```
-7. An issue where /world does not load properly seems to occur when docker-compose runs for 2-3 days. Set up a cronjob to run docker-compose restart every day.
+7. An issue where /world does not load properly seems to occur when the docker containers run for 1-3 days.
+    Update ./restart-containers.sh with the correct path to project root. Also, set execute permission:
     ```
-    0 0 1 * * /path/to/project/root/docker-compose restart
+    chmod +x ./restart-containers.sh
+    ```
+    Set up a cronjob to restart the containers every hour.
+    ```
+    0 * * * * /path/to/project/root/restart-containers.sh > /path/to/project/root/cronjob-restart.log 2>&1
     ```
