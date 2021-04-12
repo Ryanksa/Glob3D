@@ -28,7 +28,7 @@ services:
       - html:/usr/share/nginx/html
     environment:
       - DEFAULT_EMAIL=example@mail.com
-      restart: always
+    restart: always
 
   glob3d-nginx:
     image: nginx:latest
