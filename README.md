@@ -2,7 +2,7 @@
 
 ## URL, Documentation, and Video
 - URL to application: https://glob3d.tk
-- API Documentation: https://github.com/UTSCC09/project-timetobrainstorm/blob/master/server/doc.md
+- API Documentation: https://github.com/Ryanksa/Glob3D/blob/master/server/doc.md
 - Credits: https://glob3d.tk/credits
 
 ## Project Members
