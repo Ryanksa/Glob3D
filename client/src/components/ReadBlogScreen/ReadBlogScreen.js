@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './ReadBlogScreen.scss';
 import { fetchGraphql } from '../../utils/fetchService';
 import UserContext from '../../contexts/userContext';
 
-import { Button, FormControl, Input, InputLabel, MenuItem, TextField } from '@material-ui/core';
+import { Button, FormControl, TextField } from '@material-ui/core';
 import { Redirect } from 'react-router';
 
 const NUM_COMMENTS_PER_PAGE = 10;
@@ -53,7 +52,7 @@ class ReadBlogScreen extends React.Component {
       const blog = res.data.blogs[0];
       this.setState({
         title: blog.title,
-        content: blog.content,
+        content: blog.content[0],
         date: blog.date,
         author: blog.author.name
       });

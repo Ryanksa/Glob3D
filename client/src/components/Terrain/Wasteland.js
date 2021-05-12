@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePlane } from 'use-cannon';
 
 import LeaflessTree from './models/LeaflessTree';
@@ -77,9 +76,5 @@ const Wasteland = (props) => {
       </group>
     );
 };
-
-Wasteland.propTypes = {};
-
-Wasteland.defaultProps = {};
 
 export default Wasteland;

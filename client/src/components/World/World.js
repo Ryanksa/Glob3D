@@ -1,5 +1,4 @@
 import React, { Suspense, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 import './World.scss';
 import Terrain from '../Terrain/Terrain';
 import Interface from '../Interface/Interface';
@@ -39,9 +38,5 @@ const World = () => {
     </>
   );
 };
-
-World.propTypes = {};
-
-World.defaultProps = {};
 
 export default World;

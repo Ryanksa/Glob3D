@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePlane } from 'use-cannon';
 
 import BlueBirchTree from './models/BlueBirchTree';
@@ -137,9 +136,5 @@ const BluePeriod = (props) => {
       </group>
     );
 };
-
-BluePeriod.propTypes = {};
-
-BluePeriod.defaultProps = {};
 
 export default BluePeriod;

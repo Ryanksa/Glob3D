@@ -1,5 +1,4 @@
 import React, { Suspense, useContext } from 'react';
-import PropTypes from 'prop-types';
 import './Landing.scss';
 import Planet from './Planet';
 
@@ -44,9 +43,5 @@ const Landing = (props) => {
     </Html>
   </Canvas>
 };
-
-Landing.propTypes = {};
-
-Landing.defaultProps = {};
 
 export default Landing;

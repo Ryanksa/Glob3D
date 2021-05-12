@@ -1,11 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './WriteBlogScreen.scss';
 import { fetchGraphql } from '../../utils/fetchService';
 import UserContext from '../../contexts/userContext';
 
 import { Button, FormControl, Input, InputLabel, TextField } from '@material-ui/core';
 import { Redirect } from 'react-router';
+
+function sendFiles(method, url, data, callback){
+  let formdata = new FormData();
+  Object.keys(data).forEach(function(key){
+      let value = data[key];
+      formdata.append(key, value);
+  });
+  let xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+      if (xhr.status !== 200) callback("[" + xhr.status + "]" + xhr.responseText, null);
+      else callback(null, JSON.parse(xhr.responseText));
+  };
+  xhr.open(method, url, true);
+  xhr.send(formdata);
+}
 
 class WriteBlogScreen extends React.Component {
   static contextType = UserContext;
@@ -34,7 +48,7 @@ class WriteBlogScreen extends React.Component {
       return fetchGraphql( `
         mutation {
           createBlog(title:"${this.state.title}", 
-                    content:"""${this.state.content}"""
+                    content: [${this.state.content}]
                     position : [${res.data.getUserPosition[0]}, ${res.data.getUserPosition[1]}]) {
             _id
             title

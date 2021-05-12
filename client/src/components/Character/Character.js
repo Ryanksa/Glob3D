@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
 import './Character.scss';
 import Camera from './Camera';
 import { fetchGraphql } from '../../utils/fetchService';
@@ -78,10 +77,10 @@ const Character = (props) => {
           }
         `)
         .then(() => {
-          window.location.replace(`/blogScreen/${blogId.current}`);
+          window.location.replace(`/blog/${blogId.current}`);
         })
         .catch(() => {
-          window.location.replace(`/blogScreen/${blogId.current}`);
+          window.location.replace(`/blog/${blogId.current}`);
         });
       }
     };
@@ -128,9 +127,5 @@ const Character = (props) => {
     </>
   );
 };
-
-Character.propTypes = {};
-
-Character.defaultProps = {};
 
 export default Character;

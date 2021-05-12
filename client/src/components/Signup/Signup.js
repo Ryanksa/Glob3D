@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './Signup.scss';
 
 import { Button, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';

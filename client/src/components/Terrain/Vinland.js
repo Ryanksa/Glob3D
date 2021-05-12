@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePlane } from 'use-cannon';
 
 import GreenBirchTree from './models/GreenBirchTree';
@@ -114,9 +113,5 @@ const Vinland = (props) => {
       </group>
     );
 };
-
-Vinland.propTypes = {};
-
-Vinland.defaultProps = {};
 
 export default Vinland;

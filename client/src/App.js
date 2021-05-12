@@ -107,13 +107,10 @@ class App extends React.Component {
               <Route path="/world">
                 <World />
               </Route>
-              <Route exact path="/blogscreen">
+              <Route exact path="/blog">
                 <WriteBlogScreen/>
               </Route>
-              <Route exact path="/blogscreen/">
-                <WriteBlogScreen/>
-              </Route>
-              <Route path="/blogscreen/:id" component={ReadBlogScreen} />
+              <Route path="/blog/:id" component={ReadBlogScreen} />
             </Switch>
           </div>
         </UserContext.Provider>

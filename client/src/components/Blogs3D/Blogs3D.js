@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import './Blogs3D.scss';
 import blog from '../../assets/blog3d.png';
 import { useLoader } from 'react-three-fiber';
@@ -85,9 +84,5 @@ const Blogs3D = (props) => {
     ))}
   </>);
 };
-
-Blogs3D.propTypes = {};
-
-Blogs3D.defaultProps = {};
 
 export default Blogs3D;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import './Terrain.scss';
 
 import { fetchGraphql } from '../../utils/fetchService';
@@ -64,9 +63,5 @@ const Terrain = () => {
     })}
   </>);
 };
-
-Terrain.propTypes = {};
-
-Terrain.defaultProps = {};
 
 export default Terrain;
