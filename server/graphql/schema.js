@@ -13,7 +13,7 @@ module.exports = buildSchema(`
     type Blog {
         _id: ID!
         title: String!
-        content: String!
+        content: [String!]!
         author: User!
         date: String!
         position: [Int!]!
@@ -64,7 +64,7 @@ module.exports = buildSchema(`
     type RootMutation {
         signup(email: String!, password: String!, name: String!): User!
         updateUserPosition(position: [Int!]!): Boolean!
-        createBlog(title: String!, content: String!, position: [Int!]!): Blog!
+        createBlog(title: String!, content: [String!]!, position: [Int!]!): Blog!
         deleteBlog(blogId: ID!): Boolean!
         likeBlog(blogId: ID!): String!
         unlikeBlog(blogId: ID!): String!

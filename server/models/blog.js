@@ -7,7 +7,7 @@ const blogSchema = new Schema({
         required: true
     },
     content: {
-        type: String,
+        type: [String],
         required: true
     },
     author: {
