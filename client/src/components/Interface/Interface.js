@@ -14,7 +14,7 @@ const Interface = (props) => {
   }
 
   if(redirect){
-    return <Redirect to='/blogScreen'/>
+    return <Redirect to='/blog'/>
   }
   return (
     <>

@@ -8,7 +8,6 @@ import { Canvas } from 'react-three-fiber';
 import { Sky } from 'drei';
 import { Physics } from 'use-cannon';
 import { Vector3 } from 'three';
-import { Prompt } from 'react-router';
 
 const World = () => {
   // states to update Interface with the blog user is walking over
