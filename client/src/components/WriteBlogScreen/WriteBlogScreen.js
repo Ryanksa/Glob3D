@@ -1,27 +1,14 @@
 import React, { useState, useContext } from 'react';
 import './WriteBlogScreen.scss';
-import { fetchGraphql } from '../../utils/fetchService';
+import ParagraphInput from './ParagraphInput';
+import ImageInput from './ImageInput';
 import UserContext from '../../contexts/userContext';
+import { createBlog } from '../../utils/blog';
 import { Redirect } from 'react-router';
 import DescriptionIcon from '@material-ui/icons/Description';
 import ImageIcon from '@material-ui/icons/Image';
-import { IconButton } from '@material-ui/core';
-import TextField from '@material-ui/core/TextField';
-
-function sendFiles(method, url, data, callback){
-  let formdata = new FormData();
-  Object.keys(data).forEach(function(key){
-      let value = data[key];
-      formdata.append(key, value);
-  });
-  let xhr = new XMLHttpRequest();
-  xhr.onload = function() {
-      if (xhr.status !== 200) callback("[" + xhr.status + "]" + xhr.responseText, null);
-      else callback(null, JSON.parse(xhr.responseText));
-  };
-  xhr.open(method, url, true);
-  xhr.send(formdata);
-}
+import { Button, IconButton } from '@material-ui/core';
+import { uploadFile } from '../../utils/fetchService';
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function formatPostedDate(date) {
@@ -41,20 +28,6 @@ function formatPostedDate(date) {
   );
 };
 
-const ParagraphInput = () => (
-  <TextField
-    className="blog-paragraph-input blog-section"
-    label="Write a paragraph..."
-    multiline
-    rows={10}
-    variant="outlined"
-  />
-);
-
-const ImageInput = () => (
-  <></>
-);
-
 const WriteBlogScreen = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState([]);
@@ -62,34 +35,52 @@ const WriteBlogScreen = () => {
   const context = useContext(UserContext);
 
   // user creates blog
-  const createBlog = () => {
-    return fetchGraphql(`
-      query{
-        getUserPosition
-      }
-    `)
-    .then((res) => {
-      return res.json();
-    })
-    .then(({ data }) => {
-      return fetchGraphql( `
-        mutation {
-          createBlog(title:"${title}", 
-                    content: ${content}
-                    position : [${data.getUserPosition[0]}, ${data.getUserPosition[1]}]) {
-            _id
-            title
-            content
-            date
+  const handleCreateBlog = () => {
+    const sections = document.querySelectorAll(".blog-section:not(.blog-section-selector)");
+    const imageList = [];
+    const promiseList = [];
+    const contentList = [];
+
+    // upload all the images to the server first
+    document.querySelectorAll(".blog-section.blog-image-input")
+      .forEach((imageSection) => {
+        const image = imageSection.querySelector("input[type='file']").files[0];
+        promiseList.push(uploadFile("/api/images/", { image }));
+      });
+    Promise.all(promiseList)
+      .then((res) => {
+        // store the new image names returned in imageList
+        res.forEach((newFileName) => {
+          imageList.push("::img::" + newFileName + "::img::");
+        });
+
+        let imageIdx = 0;
+        sections.forEach((section, idx) => {
+          if (content[idx] === "paragraph") {
+            contentList.push(section.querySelector("textarea").value);
+          } else if (content[idx] === "image") {
+            contentList.push(imageList[imageIdx]);
+            imageIdx++;
           }
-        }
-      `).then(() => {  
+        });
+        
+        return createBlog(title, '["""' + contentList.join('""", """') + '"""]');
+      })
+      .then(() => {
         setRedirect(true);
       })
-    }).catch(() => {
-      context.handleError("Something went wrong when writing a blog. Please try again!");
-    });
-  }
+      .catch(() => {
+        context.handleError("Something went wrong when writing a blog. Please try again!");
+      });
+  };
+
+  const insertParagraphSection = () => {
+    setContent([...content, 'paragraph']);
+  };
+
+  const insertImageSection = () => {
+    setContent([...content, 'image']);
+  };
 
   const currDate = new Date();
   if (redirect) return (<Redirect to='/world'/>);
@@ -98,23 +89,32 @@ const WriteBlogScreen = () => {
       <div className="blog-form">
         <div className="blog-details">
           <input className="blog-title-input" type="text" placeholder="Title of Blog"
-                onClick={(event) => setTitle(event.target.value)} />
+                onChange={(event) => setTitle(event.target.value)} />
           <h4 className="blog-author">By {context.user.name}</h4>
           <h4 className="blog-date">Posted on {formatPostedDate(currDate)}</h4>
         </div>
-        
-        <ParagraphInput/>
+
+        {content.map((section, idx) => {
+          if (section === 'paragraph') {
+            return <ParagraphInput key={idx}/>;
+          } else if (section === 'image') {
+            return <ImageInput key={idx} id={"image" + idx}
+                              handleError={context.handleError} />;
+          }
+        })}
 
         <div className="blog-section-selector blog-section">
-          <IconButton className="selector-button">
+          <IconButton className="selector-button" onClick={insertParagraphSection}>
             <DescriptionIcon style={{ fontSize: 50 }} className="selector-icon"/>
             Write a paragraph
           </IconButton>
-          <IconButton className="selector-button">
+          <IconButton className="selector-button" onClick={insertImageSection}>
             <ImageIcon style={{ fontSize: 50 }} className="selector-icon"/>
             Upload an image
           </IconButton>
         </div>
+
+        <Button variant="contained" onClick={handleCreateBlog}>Create</Button>
       </div>
     </div>
   );

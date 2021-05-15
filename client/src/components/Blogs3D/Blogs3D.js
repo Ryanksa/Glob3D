@@ -32,9 +32,8 @@ const Blogs3D = (props) => {
         getUserPosition
       }
     `, signal)
-    .then((res) => res.json())
-    .then((data) => {
-      const pos = (data && data.data) ? data.data.getUserPosition : [0, 0];
+    .then(({ data }) => {
+      const pos = data ? data.getUserPosition : [0, 0];
       setInitPos([pos[0], 0, pos[1]]);
     })
     .catch((err) => {
@@ -58,9 +57,8 @@ const Blogs3D = (props) => {
           }
         }
       `, signal)
-      .then((res) => res.json())
-      .then((data) => {
-        const newBlogs = (data && data.data) ? data.data.blogsNearUser : null;
+      .then(({ data }) => {
+        const newBlogs = data ? data.blogsNearUser : null;
         if (newBlogs) setBlogs(newBlogs);
         updateBlogs(true);
       })

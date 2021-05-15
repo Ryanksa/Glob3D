@@ -30,16 +30,22 @@ class Login extends React.Component {
 
   login() {
     loginHelper(this.state.email, this.state.password)
-    .then((res) => {
-      return res.json();
-    }).then((res) => {
-      if(res.data) {
-        this.context.updateUser(res.data.signin);
-        this.setState({ redirect: true });
-      }
-    }).catch((res) => {
-      this.context.handleError(`Something went wrong when signing in! Please try again.`);
-    });;
+      .then((res) => {
+        if (res.errors && res.errors.length > 0) {
+          throw res.errors[0].message;
+        }
+        if(res.data) {
+          this.context.updateUser(res.data.signin);
+          this.setState({ redirect: true });
+        }
+      })
+      .catch((err) => {
+        if (err && err.length > 0) {
+          this.context.handleError(err);
+        } else {
+          this.context.handleError(`Something went wrong when signing up! Please try again.`);
+        }
+      });
   }
   
   // handling user input code adapted from https://stackoverflow.com/a/43746799

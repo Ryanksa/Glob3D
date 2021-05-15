@@ -31,7 +31,6 @@ const Terrain = () => {
           }
         }
       `, signal)
-      .then((res) => { return res.json() })
       .then((data) => {
         if (data.data.world) {
           setTerrainMatrix(data.data.world.terrain);

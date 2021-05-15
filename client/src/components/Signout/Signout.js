@@ -19,14 +19,14 @@ class Signout extends React.Component {
   }
 
   componentDidMount() {
-    signoutHelper().then((res) => {
-      return res.json();
-    }).then((res) => {
-      this.context.updateUser({});
-      this.setState({ redirect: true });
-    }).catch((res) => {
-      this.context.handleError(`Something went wrong when signing out! Please try again.`);
-    });;
+    signoutHelper()
+      .then((res) => {
+        this.context.updateUser({});
+        this.setState({ redirect: true });
+      })
+      .catch((res) => {
+        this.context.handleError(`Something went wrong when signing out! Please try again.`);
+      });;
   }
 
   render() {

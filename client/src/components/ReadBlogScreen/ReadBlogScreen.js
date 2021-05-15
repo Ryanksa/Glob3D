@@ -46,9 +46,8 @@ class ReadBlogScreen extends React.Component {
         }
       }
       `
-    ).then((res) => {
-      return res.json();
-    }).then((res) => {
+    )
+    .then((res) => {
       const blog = res.data.blogs[0];
       this.setState({
         title: blog.title,
@@ -56,7 +55,8 @@ class ReadBlogScreen extends React.Component {
         date: blog.date,
         author: blog.author.name
       });
-    }).catch((err) => {
+    })
+    .catch((err) => {
       this.context.handleError("Something went wrong when reading this blog. Please try again!");
     });
 
@@ -80,9 +80,8 @@ class ReadBlogScreen extends React.Component {
         }
       }
       `
-    ).then((res) => {
-      return res.json();
-    }).then((res) => {
+    )
+    .then((res) => {
       this.setState({
         comments: res.data.comments.map((comment) => {
           return {
@@ -93,7 +92,8 @@ class ReadBlogScreen extends React.Component {
           }
         })
       });
-    }).catch((err) => {
+    })
+    .catch((err) => {
       this.context.handleError("Something went wrong when reading this blog's comments. Please try again!");
     });
 
@@ -102,13 +102,13 @@ class ReadBlogScreen extends React.Component {
         numComments(blogId: "${this.getBlogId()}")
       }
       `
-    ).then((res) => {
-      return res.json();
-    }).then((res) => {
+    )
+    .then((res) => {
       this.setState({
         commentPages: Math.ceil(res.data.numComments / NUM_COMMENTS_PER_PAGE)
       });
-    }).catch((err) => {
+    })
+    .catch((err) => {
       this.context.handleError("Something went wrong when reading this blog's comments. Please try again!");
     });
   };
@@ -130,11 +130,11 @@ class ReadBlogScreen extends React.Component {
         }
       }
       `
-    ).then((res) => {
-      return res.json();
-    }).then((res) => {
+    )
+    .then((res) => {
       this.updateComments();
-    }).catch((err) => {
+    })
+    .catch((err) => {
       this.context.handleError("Something went wrong when writing a comment. Please try again!");
     });
   };
