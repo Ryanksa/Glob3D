@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './WriteBlogScreen.scss';
+import './Blogs.scss';
 import DragAndDrop from '../DragAndDrop/DragAndDrop';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
@@ -7,6 +7,7 @@ const ImageInput = (props) => {
     const [imageUrl, setImageUrl] = useState("");
 
     const handleInputChange = (event) => {
+        if (event.target.files.length === 0) return; 
         if(event.target.files[0].type.match("image.*")) {
             setImageUrl(URL.createObjectURL(event.target.files[0]));
         } else {
@@ -29,9 +30,9 @@ const ImageInput = (props) => {
                 border: "3px dashed rgb(70, 70, 70)",
                 backgroundColor: 'rgba(255, 255, 255, 0.7)'
             }}>
-                <div id={props.id} className="blog-image-input blog-section blog-image-preview">
+                <div id={props.id} className="blog-section blog-image-input blog-image-preview">
                     <input type="file" onChange={handleInputChange}/>
-                    <img src={imageUrl} alt="" className="image-preview"/>
+                    <img src={imageUrl} alt="" className="blog-image"/>
                 </div>
             </DragAndDrop>
         );
@@ -41,7 +42,7 @@ const ImageInput = (props) => {
             border: "3px dashed rgb(70, 70, 70)",
             backgroundColor: 'rgba(255, 255, 255, 0.7)'
         }}>
-            <div id={props.id} className="blog-image-input blog-section">
+            <div id={props.id} className="blog-section blog-image-input">
                 <input type="file" onChange={handleInputChange}/>
                 <div>Choose an image or drag it here</div>
                 <CloudUploadIcon style={{fontSize: 60}}/>

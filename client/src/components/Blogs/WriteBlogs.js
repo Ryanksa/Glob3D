@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import './WriteBlogScreen.scss';
+import './Blogs.scss';
 import ParagraphInput from './ParagraphInput';
 import ImageInput from './ImageInput';
 import UserContext from '../../contexts/userContext';
@@ -28,8 +28,7 @@ function formatPostedDate(date) {
   );
 };
 
-const WriteBlogScreen = () => {
-  const [title, setTitle] = useState("");
+const WriteBlogs = () => {
   const [content, setContent] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const context = useContext(UserContext);
@@ -49,11 +48,12 @@ const WriteBlogScreen = () => {
       });
     Promise.all(promiseList)
       .then((res) => {
-        // store the new image names returned in imageList
+        // store the new image names from the responses
         res.forEach((newFileName) => {
           imageList.push("::img::" + newFileName + "::img::");
         });
 
+        // build the content list based on each section (paragraph or image)
         let imageIdx = 0;
         sections.forEach((section, idx) => {
           if (content[idx] === "paragraph") {
@@ -63,8 +63,11 @@ const WriteBlogScreen = () => {
             imageIdx++;
           }
         });
-        
-        return createBlog(title, '["""' + contentList.join('""", """') + '"""]');
+
+        // grab the title from the DOM
+        const title = document.querySelector(".blog-title").innerHTML.replace(/(<([^>]+)>)/gi, "");;
+
+        return createBlog('"""' + title + '"""', '["""' + contentList.join('""", """') + '"""]');
       })
       .then(() => {
         setRedirect(true);
@@ -86,12 +89,13 @@ const WriteBlogScreen = () => {
   if (redirect) return (<Redirect to='/world'/>);
   return (
     <div className="blog-screen-wrapper">
-      <div className="blog-form">
+      <div className="blog-container">
         <div className="blog-details">
-          <input className="blog-title-input" type="text" placeholder="Title of Blog"
-                onChange={(event) => setTitle(event.target.value)} />
-          <h4 className="blog-author">By {context.user.name}</h4>
-          <h4 className="blog-date">Posted on {formatPostedDate(currDate)}</h4>
+          <div className="blog-title" type="text" contentEditable>
+            Title of Blog
+          </div>
+          <div className="blog-author">By {context.user.name}</div>
+          <div className="blog-date">Posted on {formatPostedDate(currDate)}</div>
         </div>
 
         {content.map((section, idx) => {
@@ -120,4 +124,4 @@ const WriteBlogScreen = () => {
   );
 }
 
-export default WriteBlogScreen;
+export default WriteBlogs;

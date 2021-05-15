@@ -13,8 +13,8 @@ import {
   Route
 } from "react-router-dom";
 import Signup from './components/Signup/Signup';
-import ReadBlogScreen from './components/ReadBlogScreen/ReadBlogScreen';
-import WriteBlogScreen from './components/WriteBlogScreen/WriteBlogScreen';
+import ReadBlogs from './components/Blogs/ReadBlogs';
+import WriteBlogs from './components/Blogs/WriteBlogs';
 
 import React from 'react';
 import UserContext from './contexts/userContext';
@@ -108,9 +108,9 @@ class App extends React.Component {
                 <World />
               </Route>
               <Route exact path="/blog">
-                <WriteBlogScreen/>
+                <WriteBlogs/>
               </Route>
-              <Route path="/blog/:id" component={ReadBlogScreen} />
+              <Route path="/blog/:id" component={ReadBlogs} />
             </Switch>
           </div>
         </UserContext.Provider>
