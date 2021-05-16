@@ -86,9 +86,15 @@ const WriteBlogs = () => {
   };
 
   const currDate = new Date();
-  if (redirect) return (<Redirect to='/world'/>);
+  if (redirect) {
+    return <Redirect to='/world'/>;
+  }
   return (
     <div className="blog-screen-wrapper">
+      <Button variant="contained" className="back-button" 
+            onClick={() => setRedirect(true)}>
+        {"< Back to World"}
+      </Button>
       <div className="blog-container">
         <div className="blog-details">
           <div className="blog-title" type="text" contentEditable>
@@ -118,7 +124,7 @@ const WriteBlogs = () => {
           </IconButton>
         </div>
 
-        <Button variant="contained" onClick={handleCreateBlog}>Create</Button>
+        <Button color="primary" variant="contained" onClick={handleCreateBlog}>Create</Button>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { fetchGraphql } from './fetchService';
 const createComment = (blogId, content) => {
     return fetchGraphql(`
         mutation {
-            addComment(blogId:"${blogId}", content:"${content}") {
+            addComment(blogId:"${blogId}", content:${content}) {
                 _id
             }
         }

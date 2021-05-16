@@ -10,6 +10,14 @@ $blog-section-gap: 2rem;
     font-family: 'Roboto', 'Open Sans', sans-serif;
     display: flex;
     justify-content: center;
+    margin-bottom: 40px; // give space for back-button on smaller screens
+
+    .back-button {
+        height: 40px;
+        position: fixed;
+        left: 10px;
+        bottom: 10px;
+    }
 
     .blog-container {
         display: flex;
@@ -23,7 +31,6 @@ $blog-section-gap: 2rem;
         padding: 20px;
 
         .blog-details {
-            font-size: 18px;
             width: 100%;
 
             .blog-title {
@@ -39,12 +46,16 @@ $blog-section-gap: 2rem;
             }
 
             .blog-author {
-                margin-top: 5px;
-                padding-left: 5px;
+                font-size: 20px;
+                margin: 5px 0;
+                padding-left: 10px;
+                display: flex;
+                align-items: center;
             }
 
             .blog-date {
-                padding-left: 5px;
+                font-size: 16px;
+                padding-left: 10px;
             }
         }
 
@@ -54,7 +65,7 @@ $blog-section-gap: 2rem;
 
         .blog-paragraph {
             white-space: pre-line;
-            font-size: 20px;
+            font-size: 24px;
             line-height: 40px;
         }
 
@@ -114,6 +125,58 @@ $blog-section-gap: 2rem;
             @media only screen and (max-width: 550px) {
                 .selector-button {
                     font-size: 16px;
+                }
+            }
+        }
+
+        .blog-comments {
+            width: 100%;
+
+            .comment-header {
+                font-size: 32px;
+            }
+
+            .write-comment {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                width: 100%;
+                margin-left: 10px;
+
+                .current-user {
+                    text-align: center;
+                }
+
+                Button {
+                    height: 40px;
+                }
+            }
+
+            .comment-item {
+                margin: 40px 0;
+
+                .comment-info {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 5px;
+                    border-bottom: 1px solid rgb(197, 197, 197);
+
+                    .comment-author {
+                        display: flex;
+                        align-items: center;
+                        font-size: 20px;
+                        margin-right: 0.5rem;
+                    }    
+
+                    .comment-date {
+                        font-size: 12px;
+                    }
+                }
+
+                .comment-content {
+                    font-size: 22px;
+                    white-space: pre-line;
+                    padding-left: 10px;
                 }
             }
         }
