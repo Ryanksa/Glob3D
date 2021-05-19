@@ -1,37 +1,164 @@
 .Landing {
     // 70px is the height of the topbar
-    height: calc(100vh - 70px) !important;
+    height: calc(100vh - 70px);
     background-color: rgb(156, 176, 194);
-    position: absolute;
-}
+    width: 100%;
+    overflow: hidden;
 
-.landing-text-container {
-    height: 100%;
-    text-align: center;
-    color: white;
-    position: relative;
-    top: calc(50% - 54px - 2rem - 25px);
-}
+    .slider-buttons {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
 
-.landing-text-content {
-    font-size: 54px;
-    margin: 0 auto 4rem auto;
-    width: 700px;
-}
+        a {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: solid 2px white;
+            border-radius: 999px;
+            background-color: transparent;
+            transition-duration: .4s;
+            margin: 0 10px;
+        }
 
-.landing-text-button {
-    border: none;
-    height: 40px;
-    border-radius: 5px;
-    background-color: rgb(143, 143, 255);
-    padding: 5px 15px 5px 15px;
-}
+        a.selected-button {
+            background-color: white;
+        }
+    }
+    
+    .slides {
+        display: flex;
+        overflow-x: scroll;
+        width: 100vw;
+        height: 100%;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        // hides scrollbar on FireFox and IE
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        // hides scrollbar on Chrome
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .slide-container {
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            width: 100vw;
+            overflow: hidden;
+        }
 
-.landing-text-button:hover {
-    color: rgb(143, 143, 255);
-    background: white;
-}
+        #slide1 {
+            position: relative;
 
-.landing-text-button:not(:last-child) {
-    margin-right: 10px;
+            img {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                height: auto;
+                opacity: 0.5;
+            }
+
+            .slide1-content {
+                position: absolute;
+                top: 50px;
+                right: 20px;
+                text-align: center;
+                font-size: 34px;
+                width: 500px;
+                color: rgb(247, 70, 99);
+                border: 5px solid rgb(247, 70, 99);
+                border-radius: 10px;
+                background-color: rgba(190, 190, 190, 0.2);
+                transform: rotateZ(10deg);
+            }
+        }
+        
+        #slide2 {
+            position: relative;
+
+            img {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                height: auto;
+                opacity: 0.5;
+            }
+
+            .slide2-content {
+                position: absolute;
+                right: 50px;
+                top: 10px;
+                text-align: center;
+                font-size: 34px;
+                width: 300px;
+                transform: rotateZ(-10deg);
+                color: rgb(247, 70, 99);
+                border: 5px solid rgb(247, 70, 99);
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+            }
+        }
+        
+        #slide3 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .slide3-content-container {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+                
+                img {
+                    width: 300px;
+                    height: auto;
+                }
+        
+                .slide3-content {
+                    color: rgb(241, 241, 241);
+                    font-size: 54px;
+                    margin-left: 3rem;
+                    width: 450px;
+                }
+
+                @media screen and (max-width: 850px) {
+                    & {
+                        img {
+                            width: 150px;
+                        }
+                        .slide3-content {
+                            font-size: 27px !important;
+                            width: 225px !important;
+                        }
+                    }
+                }
+            }
+            
+            .slide3-button {
+                border: none;
+                height: 50px;
+                font-size: 20px;
+                border-radius: 5px;
+                background-color: rgb(143, 143, 255);
+                padding: 5px 15px 5px 15px;
+                margin-bottom: 1rem;
+            }
+            
+            .slide3-button:hover {
+                color: rgb(143, 143, 255);
+                background: white;
+                border: 1px solid;
+            }
+            
+            .slide3-button:not(:last-child) {
+                margin-right: 10px;
+            }
+        }
+    }
 }
