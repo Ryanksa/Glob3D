@@ -22,20 +22,21 @@
 
 ## Description of Application
 
-Glob3D is a blogging platform where users walk around a 3D world interacting with blog posts. The 3D world will be made up of tiles/blocks of pre-determined types of land (flat, hills, etc). Initially, we may generate a 10x10-tiled world, and as the number of blog posts increases to fill up the existing space, we will dynamically generate more tiles to expand the world.
+Glob3D is a blogging platform where users walk around a 3D world interacting with blog posts. The 3D world will be made up of tiles/blocks of pre-determined types of land. Initially, we may generate a 10x10-tiled world, and as the number of blog posts increases to fill up the existing space, we will dynamically generate more tiles to expand the world.
 
-On first visit, users can sign in with a third-party account. When signed in, users will be dropped into this 3D world where they can write their own blog post at a chosen spot, read an existing blog post, like and comment on a blog post, open their inventories with a list of posts written and liked. Moreover, users can open a simple map to see their current location, as well as to search keywords to see the locations of other blog posts on the map. Users can follow each other. If user A follows user B, then user A can see the locations of user B's blog posts on their map.
+On first visit, users can sign up a new account with any syntactically valid email address. After signing up and logging in, users will be dropped into this 3D world where they can write their own blog post at a chosen spot, read an existing blog post, like and comment on a blog post, open their inventories with a list of posts written and liked. Moreover, users can open a simple map to see their current location, as well as to search keywords to see the locations of other blog posts on the map. Users can follow each other. If user A follows user B, then user A can see the locations of user B's blog posts on their map.
 
 ## Key Features of Beta Version
 
-- Sign in with a third-party account (Google)
+- Sign up and log in
 - Walk around the 3D world with a 3D character model
 - Write and post a blog anywhere in the 3D world
 - Access and read an existing blog posts
-- Like and comment on a blog post
+- Comment on blog posts
 
 ## Additional Features of Final Version
 
+- Like blog posts
 - Follow another user
 - Open a map of the world to:
     - see my current location
@@ -48,7 +49,7 @@ On first visit, users can sign in with a third-party account. When signed in, us
 
 ## Description of Technology
 
-We will be using React on the frontend, nodejs and MongoDB on the backend. To make the 3D models, we will be using threejs and react-three-fiber. 
+We will be using React on the frontend, Node.js and MongoDB on the backend. To make the 3D models, we will be using threejs and react-three-fiber. 
 
 ## Top 5 Challenges
 
