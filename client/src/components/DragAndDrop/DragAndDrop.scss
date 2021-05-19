@@ -1,0 +1,23 @@
+.drag-and-drop-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.drag-and-drop-box {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+}
+
+.drag-and-drop-text {
+    position: absolute;
+    top: calc(50% - 18px);
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: black;
+    font-size: 36px;
+}

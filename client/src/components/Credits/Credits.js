@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './Credits.scss';
 
 const Credits = () => (
@@ -7,15 +6,6 @@ const Credits = () => (
     <h1>Credits</h1>
     <div className="credits-list-container">
       <ul>
-        <li>React found <a href="https://reactjs.org/">here</a></li>
-        <li>React Dom found <a href="https://www.npmjs.com/package/react-dom">here</a></li>
-        <li>React Router Dom found <a href="https://www.npmjs.com/package/react-dom">here</a></li>
-        <li>Material UI found <a href="https://material-ui.com/">here</a></li>
-        <li>React Three Fiber found <a href="https://github.com/pmndrs/react-three-fiber">here</a></li>
-        <li>Drei found <a href="https://github.com/pmndrs/drei">here</a></li>
-        <li>Node-Sass found <a href="https://www.npmjs.com/package/node-sass">here</a></li>
-        <li>Threejs found <a href="https://threejs.org/">here</a></li>
-        <li>Use Cannon found <a href="https://github.com/pmndrs/use-cannon">here</a></li>
         <li>Icons made by <a href="https://www.flaticon.com/authors/turkkub" title="turkkub">turkkub</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>
         <li>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>
         <li>Icons made by <a href="https://smashicons.com/" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></li>
@@ -32,9 +22,5 @@ const Credits = () => (
     </div>
   </div>
 );
-
-Credits.propTypes = {};
-
-Credits.defaultProps = {};
 
 export default Credits;

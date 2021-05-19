@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import './Terrain.scss';
 
 import { fetchGraphql } from '../../utils/fetchService';
@@ -32,7 +31,6 @@ const Terrain = () => {
           }
         }
       `, signal)
-      .then((res) => { return res.json() })
       .then((data) => {
         if (data.data.world) {
           setTerrainMatrix(data.data.world.terrain);
@@ -64,9 +62,5 @@ const Terrain = () => {
     })}
   </>);
 };
-
-Terrain.propTypes = {};
-
-Terrain.defaultProps = {};
 
 export default Terrain;

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import './Interface.scss';
 import { Redirect } from 'react-router-dom';
 
@@ -15,7 +14,7 @@ const Interface = (props) => {
   }
 
   if(redirect){
-    return <Redirect to='/blogScreen'/>
+    return <Redirect to='/blog'/>
   }
   return (
     <>
@@ -58,9 +57,5 @@ const Interface = (props) => {
     </>
   );
 };
-
-Interface.propTypes = {};
-
-Interface.defaultProps = {};
 
 export default Interface;

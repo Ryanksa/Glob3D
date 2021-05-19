@@ -9,7 +9,7 @@ const login = (email, password) => {
         _id
       }
     }
-  `)
+  `);
 };
 
 const signup = (email, password, name) => {
@@ -21,7 +21,7 @@ const signup = (email, password, name) => {
         _id
       }
     }
-  `)
+  `);
 };
 
 const signout = () => {
@@ -29,7 +29,7 @@ const signout = () => {
     query {
       signout
     }
-    `);
+  `);
 };
 
 const isLoggedIn = (user) => {

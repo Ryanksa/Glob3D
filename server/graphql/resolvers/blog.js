@@ -157,7 +157,10 @@ module.exports = {
             throw new Error("Invalid position: position must be of [Int, Int]");
         }
         const cleanedTitle = sanitizeString(title);
-        const cleanedContent = sanitizeString(content);
+        const cleanedContent = [];
+        content.forEach((section) => {
+            cleanedContent.push(sanitizeString(section));
+        });
 
         return User.findOne({ _id: req.userId })
             .then(function(user) {

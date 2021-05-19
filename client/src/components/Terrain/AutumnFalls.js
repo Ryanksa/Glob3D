@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { usePlane } from 'use-cannon';
 
 import OrangeBirchTree from './models/OrangeBirchTree';
@@ -82,9 +81,5 @@ const AutumnFalls = (props) => {
       </group>
     );
 };
-
-AutumnFalls.propTypes = {};
-
-AutumnFalls.defaultProps = {};
 
 export default AutumnFalls;

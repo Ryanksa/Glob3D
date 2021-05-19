@@ -1,17 +1,18 @@
-import React, { Suspense, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { Suspense, useState, useContext } from 'react';
 import './World.scss';
 import Terrain from '../Terrain/Terrain';
 import Interface from '../Interface/Interface';
 import Blogs3D from '../Blogs3D/Blogs3D';
+import UserContext from '../../contexts/userContext';
+import { isLoggedIn } from '../../utils/auth';
 
 import { Canvas } from 'react-three-fiber';
 import { Sky } from 'drei';
 import { Physics } from 'use-cannon';
 import { Vector3 } from 'three';
-import { Prompt } from 'react-router';
 
 const World = () => {
+  const context = useContext(UserContext);
   // states to update Interface with the blog user is walking over
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
@@ -21,6 +22,7 @@ const World = () => {
     if (blogAuthor !== author) setBlogAuthor(author);
   };
 
+  if (!isLoggedIn(context.user)) return <></>;
   return(
     <>
       <Interface blogTitle={blogTitle} blogAuthor={blogAuthor}/>
@@ -39,9 +41,5 @@ const World = () => {
     </>
   );
 };
-
-World.propTypes = {};
-
-World.defaultProps = {};
 
 export default World;
