@@ -8,16 +8,10 @@
 ## Project Members
 
 - Hung Jen (Ryan) Lin
-    - UTORid: linhung3
-    - Student Number: 1004185883
     - Email: ryanhungjen.lin@mail.utoronto.ca
 - Brian Lin
-    - UTORid: linbria3
-    - Student Number: 1003976352
     - Email: briankw.lin@mail.utoronto.ca
 - Seongjin (Chris) Hong
-    - UTORid: hongse10
-    - Student Number: 1001694614
     - Email: seongijn.hong@mail.utoronto.ca
 
 ## Description of Application
