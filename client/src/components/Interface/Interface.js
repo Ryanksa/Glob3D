@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import "./Interface.scss";
 import { Redirect } from "react-router-dom";
 
@@ -63,4 +63,4 @@ const Interface = (props) => {
   );
 };
 
-export default Interface;
+export default memo(Interface);

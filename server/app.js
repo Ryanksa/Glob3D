@@ -32,10 +32,10 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.connect(process.env.MONGO_URI || config.mongoUri)
     .then(function() {
         app.listen(PORT, function(err) {
-            if (err) console.log(err);
+            if (err) console.error(err);
             initWorld("Server started on port " + PORT);
         });
     })
     .catch(function(err) {
-        console.log(err);
+        console.error(err);
     });

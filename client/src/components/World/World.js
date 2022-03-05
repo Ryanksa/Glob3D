@@ -4,9 +4,11 @@ import Terrain from "../Terrain/Terrain";
 import Interface from "../Interface/Interface";
 import Blogs3D from "../Blogs3D/Blogs3D";
 import Character from '../Character/Character';
+import Peer from '../Peer/Peer';
 import UserContext from "../../contexts/userContext";
 import { isLoggedIn } from "../../utils/auth";
-import { setupConnection, closeConnection } from "../../utils/websocket";
+import websocket from "../../utils/websocket";
+import webrtc from "../../utils/webrtc";
 import { fetchGraphql } from "../../utils/fetchService";
 
 import { Canvas } from "react-three-fiber";
@@ -22,6 +24,56 @@ const World = () => {
   // states to update Interface with the blog user is walking over
   const [blogTitle, setBlogTitle] = useState("");
   const [blogAuthor, setBlogAuthor] = useState("");
+  // state to keep track of concurrent users' positions
+  const [peerPositions, setPeerPositions] = useState({});
+
+  useEffect(() => {
+    if (context && context.user && context.user._id) {
+      // Setup peer-to-peer connection to update each other's position
+      const peerDataCallback = (peerId, data) => {
+        if (data.startsWith("pos:::")) {
+          const pos = JSON.parse(data.slice(6));
+          setPeerPositions((positions) => ({
+            ...positions,
+            [peerId]: pos,
+          }));
+        }
+      };
+      const peerCloseCallback = (peerId) => {
+        setPeerPositions((positions) => {
+          delete positions[peerId];
+          return {...positions};
+        });
+      };
+      webrtc.setupConnection(context.user._id, peerDataCallback, peerCloseCallback);
+
+      // Connect to server's websocket to write user position and read blogs
+      fetchGraphql(`
+        query {
+          authenticateConnection
+        }
+      `).then(() => {
+        websocket.setupConnection(context.user._id, (event) => {
+          const data = event.data;
+          if (data.startsWith("pos:::")) {
+            const pos = JSON.parse(data.slice(6));
+            setInitPos([pos[0], 0, pos[1]]);
+          } else if (data.startsWith("blogs:::")) {
+            const blogs = JSON.parse(data.slice(8));
+            setBlogs(blogs);
+          } else if (data.startsWith("peer:::")) {
+            const peerId = data.slice(7);
+            webrtc.connectToPeer(context.user._id, peerId, peerDataCallback, peerCloseCallback);
+          }
+        });
+      });
+    }
+
+    return () => {
+      webrtc.closeConnection();
+      websocket.closeConnection();
+    }
+  }, [context, context.user, context.user._id]);
 
   useEffect(() => {
     // Setup long polling to be notified when other users create blogs
@@ -58,35 +110,6 @@ const World = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (context && context.user && context.user._id) {
-      // Connect to server websocket to write user position and read blogs
-      fetchGraphql(`
-        query {
-          authenticateConnection
-        }
-      `).then(() => {
-        setupConnection(context.user._id, (event) => {
-          const data = event.data;
-
-          if (data.startsWith("pos:::")) {
-            const pos = data.slice(6).split(",");
-            setInitPos([+pos[0], 0, +pos[1]]);
-          }
-
-          if (data.startsWith("blogs:::")) {
-            const blogs = JSON.parse(data.slice(8));
-            setBlogs(blogs);
-          }
-        });
-      });
-    }
-
-    return () => {
-      closeConnection();
-    }
-  }, [context, context.user, context.user._id]);
-
   const updateInterface = (title, author) => {
     if (blogTitle !== title) setBlogTitle(title);
     if (blogAuthor !== author) setBlogAuthor(author);
@@ -96,7 +119,7 @@ const World = () => {
   return (
     <div id="world">
       <Interface blogTitle={blogTitle} blogAuthor={blogAuthor} />
-      <Canvas className="World">
+      <Canvas className="WorldCanvas">
         <Suspense fallback={null}>
           <ambientLight intensity={0.3} />
           <directionalLight
@@ -109,11 +132,20 @@ const World = () => {
             sunPosition={new Vector3(500, 1000, 250)}
           />
 
-          <Physics gravity={[0, -100, 0]}>
+          <Physics gravity={[0, -1000, 0]}>
             <Terrain />
             <Blogs3D blogs={blogs} />
             {initPos &&
               <Character initPos={initPos} blogs={blogs} updateInterface={updateInterface} />
+            }
+            {peerPositions &&
+              Object.keys(peerPositions).map((peerId) => (
+                <Peer 
+                  x={peerPositions[peerId][0]}
+                  y={0}
+                  z={peerPositions[peerId][1]}
+                />
+              ))
             }
           </Physics>
         </Suspense>

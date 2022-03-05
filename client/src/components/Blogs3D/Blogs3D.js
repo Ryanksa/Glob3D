@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import './Blogs3D.scss';
 import blog from '../../assets/blog3d.png';
 import { useLoader } from 'react-three-fiber';
@@ -26,4 +26,4 @@ const Blogs3D = (props) => {
   );
 };
 
-export default Blogs3D;
+export default memo(Blogs3D);

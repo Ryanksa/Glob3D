@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import './Terrain.scss';
 
 import { fetchGraphql } from '../../utils/fetchService';
@@ -63,4 +63,4 @@ const Terrain = () => {
   </>);
 };
 
-export default React.memo(Terrain);
+export default memo(Terrain);

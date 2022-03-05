@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
-import './Character.scss';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import Camera from './Camera';
-import { sendData } from '../../utils/websocket';
+import websocket from '../../utils/websocket';
+import webrtc from '../../utils/webrtc';
 
 import { useFrame, useThree } from 'react-three-fiber';
 import { useSphere } from 'use-cannon';
@@ -32,7 +32,7 @@ const getXZ = (position) => {
 const Character = (props) => {
   // character is a sphere
   const [ref, api] = useSphere(() => ({
-    mass: 1,
+    mass: 0.5,
     type: "Dynamic",
     position: props.initPos
   }));
@@ -43,7 +43,6 @@ const Character = (props) => {
     left: false,
     right: false
   });
-  const isMoving = useRef(false);
   const { camera } = useThree();
   const blogId = useRef(null);
 
@@ -53,16 +52,12 @@ const Character = (props) => {
         ...m,
         [move(e.code)]: true
       }));
-      isMoving.current = true;
     };
     const handleKeyUp = (e) => {
-      setMovement((m) => {
-        const newM = {
-          ...m,
-          [move(e.code)]: false
-        };
-        return newM;
-      });
+      setMovement((m) => ({
+        ...m,
+        [move(e.code)]: false
+      }));
       // spacebar to interact with blogs
       if (e.code === "Space" && blogId.current) {
         window.location.replace(`/blog/${blogId.current}`);
@@ -72,11 +67,13 @@ const Character = (props) => {
     document.addEventListener("keyup", handleKeyUp);
 
     const posUpdateInterval = setInterval(() => {
-      if (isMoving.current && camera && camera.position) {
+      if (camera && camera.position) {
         const [x, z] = getXZ(camera.position);
-        sendData(`pos:::${x},${z}`);
+        const posData = `pos:::[${x},${z}]`;
+        websocket.sendData(posData);
+        webrtc.broadcastData(posData);
       }
-    }, 200);
+    }, 500);
     
     return (() => {
       document.removeEventListener("keydown", handleKeyDown);
@@ -112,11 +109,11 @@ const Character = (props) => {
     <>
       <Camera />
       <mesh ref={ref}>
-        <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} />
-        <meshLambertMaterial attach="material" color="grey" />
+        <sphereBufferGeometry attach="geometry" args={[0.5, 32, 32]} />
+        <meshLambertMaterial attach="material" color="lavender" />
       </mesh>
     </>
   );
 };
 
-export default Character;
+export default memo(Character);

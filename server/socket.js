@@ -12,23 +12,36 @@ let wss;
 let connections = {};
 let authentications = {};
 
-const findUser = async (userId) => {
-  const user = await User.findOne({ _id: userId })
-  return user;
+const findUser = (userId) => {
+  return User.findOne({ _id: userId }).then((user) => user);
 };
 
-const findBlogs = async (position) => {
-  let blogs = Blog.find({
+const findBlogs = (position) => {
+  return Blog.find({
     position: {
       $near: position,
       $maxDistance: BLOGS_MAX_DISTANCE
     }
-  }).limit(BLOGS_LIMIT); 
-  blogs = await User.populate(blogs, [{ path: "author" }]);
-  return blogs.map((blog) => {
-    blog.author.password = null;
-    return blog;
-  });
+  }).limit(BLOGS_LIMIT)
+    .then((blogs) => {
+      return User.populate(blogs, [{ path: "author" }]);
+    })
+    .then((blogs) => {
+      return blogs.map((blog) => {
+        blog.author.password = null;
+        return blog;
+      });
+    });
+};
+
+const broadcastData = (self, data) => {
+  if (wss) {
+    wss.clients.forEach((client) => {
+      if (client !== self && client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
+    });
+  }
 };
 
 const socket = {
@@ -59,7 +72,7 @@ const socket = {
                   position: user.position,
                   lastPosition: user.position,
                 };
-                ws.send(`pos:::${user.position[0]},${user.position[1]}`);
+                ws.send(`pos:::[${user.position[0]},${user.position[1]}]`);
                 return findBlogs(user.position);
               })
               .then((blogs) => {
@@ -68,6 +81,7 @@ const socket = {
               .catch((err) => {
                 console.error(err);
               });
+            broadcastData(ws, `peer:::${ws.id}`);
             return;
           }
 
@@ -75,8 +89,7 @@ const socket = {
 
           // On position update, update connection obj, check if need to re-send blogs
           if (stringData.startsWith("pos:::")) {
-            const posString = stringData.slice(6);
-            const position = posString.split(",").map((coord) => +coord);
+            const position = JSON.parse(stringData.slice(6));
             if (!isFinite(position[0]) || !isFinite(position[1])) {
               return;
             }

@@ -1,6 +1,6 @@
 let socket;
 
-module.exports = {
+const websocket = {
   setupConnection: (user_id, messageCallback) => {
     socket = new WebSocket(process.env.REACT_APP_WS_URL);
     socket.addEventListener("open", (event) => {
@@ -21,3 +21,5 @@ module.exports = {
     }
   },
 };
+
+export default websocket;
