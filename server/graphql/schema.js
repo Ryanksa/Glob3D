@@ -58,6 +58,7 @@ module.exports = buildSchema(`
         numFollows(followerId: ID, followedId: ID): Int!
         signin(email: String!, password: String!): User!
         signout: Boolean!
+        authenticateConnection: Boolean!
         world(long: Boolean): World
     }
 

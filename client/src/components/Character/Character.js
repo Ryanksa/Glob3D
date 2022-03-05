@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Character.scss';
 import Camera from './Camera';
-import { fetchGraphql } from '../../utils/fetchService';
+import { sendData } from '../../utils/websocket';
 
 import { useFrame, useThree } from 'react-three-fiber';
 import { useSphere } from 'use-cannon';
@@ -43,54 +43,45 @@ const Character = (props) => {
     left: false,
     right: false
   });
+  const isMoving = useRef(false);
   const { camera } = useThree();
   const blogId = useRef(null);
 
   useEffect(() => {
-    // keyboard input handlers
     const handleKeyDown = (e) => {
       setMovement((m) => ({
-          ...m,
-          [move(e.code)]: true
+        ...m,
+        [move(e.code)]: true
       }));
+      isMoving.current = true;
     };
     const handleKeyUp = (e) => {
-      setMovement((m) => ({
+      setMovement((m) => {
+        const newM = {
           ...m,
           [move(e.code)]: false
-      }));
-      // update user position
-      if (camera && camera.position) {
-        const [new_x, new_z] = getXZ(camera.position);
-        fetchGraphql(`
-          mutation {
-            updateUserPosition(position: [${new_x}, ${new_z}])
-          }
-        `);
-      }
+        };
+        return newM;
+      });
       // spacebar to interact with blogs
       if (e.code === "Space" && blogId.current) {
-        const [x, z] = getXZ(ref.current.position);
-        fetchGraphql(`
-          mutation {
-            updateUserPosition(position: [${x}, ${z}])
-          }
-        `)
-        .then(() => {
-          window.location.replace(`/blog/${blogId.current}`);
-        })
-        .catch(() => {
-          window.location.replace(`/blog/${blogId.current}`);
-        });
+        window.location.replace(`/blog/${blogId.current}`);
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
+
+    const posUpdateInterval = setInterval(() => {
+      if (isMoving.current && camera && camera.position) {
+        const [x, z] = getXZ(camera.position);
+        sendData(`pos:::${x},${z}`);
+      }
+    }, 200);
     
     return (() => {
-      // unmount handlers
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
+      clearInterval(posUpdateInterval);
     });
   }, []);
 

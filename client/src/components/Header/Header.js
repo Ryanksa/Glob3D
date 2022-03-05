@@ -7,10 +7,10 @@ import UserContext from '../../contexts/userContext';
 
 const Header = () => (
   <header className="header">
-    <a href="/" className="header-logo-link">
+    <Link className="header-logo-link" to="/">
       <div className="header-logo"></div>
       <h1 className="header-title">Glob3D</h1>
-    </a>
+    </Link>
     <div className="header-nav-links">
       <Link className="header-link" to="/credits">Credits</Link>
       <UserContext.Consumer>

@@ -63,4 +63,4 @@ const Terrain = () => {
   </>);
 };
 
-export default Terrain;
+export default React.memo(Terrain);

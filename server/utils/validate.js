@@ -2,6 +2,9 @@ const sanitize = require('mongo-sanitize');
 const createDOMPurify = require('dompurify');
 const { JSDOM } = require('jsdom');
 const ObjectId = require('mongoose').Types.ObjectId;
+const config = require('../config');
+
+const BLOGS_LIMIT = config.blogsLimit;
 
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
@@ -27,6 +30,9 @@ module.exports = {
     },
     validateFirstAfter: function(first, after) {
         return (first <= 20 && first > 0 && after >= 0);
+    },
+    validateFirstAfterBlogs: function(first, after) {
+        return (first <= BLOGS_LIMIT && first > 0 && after >= 0);
     },
     sanitizeString: function(string) {
         let clean = sanitize(string);

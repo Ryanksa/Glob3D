@@ -5,7 +5,11 @@ const Comment = require('../../models/comment');
 const World = require('../../models/world');
 const { generateTerrain } = require('../../utils/worldGeneration');
 const { runBlogListeners, pushBlogListener } = require('../../listeners/blogListeners');
-const { validateId, validatePosition, validateFirstAfter, sanitizeString } = require('../../utils/validate');
+const { validateId, validatePosition, validateFirstAfterBlogs, sanitizeString } = require('../../utils/validate');
+const config = require('../../config');
+
+const BLOGS_MAX_DISTANCE = config.blogsMaxDistance;
+const BLOGS_LIMIT = config.blogsLimit;
 
 const updateTerrain = () => {
     // generate more terrain if too many blogs
@@ -19,11 +23,11 @@ const updateTerrain = () => {
 };
 
 const updateUsers = (blogPosition) => {
-    // update all the users within 100 radius of a blog
+    // update all the users within a certain radius of a blog
     return User.find({
         position: {
             $near: blogPosition,
-            $maxDistance: 100
+            $maxDistance: BLOGS_MAX_DISTANCE
         }
     })
     .then(function(users) {
@@ -42,9 +46,9 @@ module.exports = {
             res.status(401);
             throw new Error("Unauthorized access");
         } 
-        if (!validateFirstAfter(first, after)) {
+        if (!validateFirstAfterBlogs(first, after)) {
             res.status(400);
-            throw new Error("Invalid first or after range: 0 < first <= 20, after >= 0");
+            throw new Error(`Invalid first or after range: 0 < first <= ${BLOGS_LIMIT}, after >= 0`);
         }
 
         let filter = {};
@@ -104,9 +108,9 @@ module.exports = {
             res.status(401);
             throw new Error("Unauthorized access");
         }
-        if (!validateFirstAfter(limit, 0)) {
+        if (!validateFirstAfterBlogs(limit, 0)) {
             res.status(400);
-            throw new Error("Invalid limit range: 0 < limit <= 20");
+            throw new Error(`Invalid limit range: 0 < limit <= ${BLOGS_LIMIT}`);
         }
 
         const getBlogs = () => {
@@ -115,7 +119,7 @@ module.exports = {
                     return Blog.find({
                         position: {
                             $near: user.position,
-                            $maxDistance: 100
+                            $maxDistance: BLOGS_MAX_DISTANCE
                         }
                     })
                     .limit(limit);

@@ -2,10 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const User = require('../../models/user');
-const Blog = require('../../models/blog');
 const config = require('../../config');
 const { runBlogListeners } = require('../../listeners/blogListeners');
 const { validateId, validateEmail, validatePassword, validatePosition, validateFirstAfter, sanitizeString } = require('../../utils/validate');
+const socket = require('../../socket');
 
 module.exports = {
     users: function({ first, after, userId }, { req, res }) {
@@ -164,5 +164,16 @@ module.exports = {
             .catch(function(err) {
                 throw err;
             });
+    },
+    authenticateConnection: function(args, { req }) {
+        if (!req.isAuth) {
+            res.status(401);
+            throw new Error("Unauthorized access");
+        }
+        socket.pushAuthentication(req.userId);
+        setTimeout(() => {
+            socket.clearAuthentication(req.userId);
+        }, 20000);
+        return true;
     }
 };

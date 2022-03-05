@@ -4,14 +4,14 @@ const blogListeners = {};
 module.exports = {
     pushBlogListener: function(userId, callback) {
         return new Promise(function(resolve, reject) {
-            // timeout this blog listener after 60 seconds
+            // timeout this blog listener after 10mins
             function blogTimeout() {
                 if (blogListeners[userId]) {
                     blogListeners[userId].shift();
                 }
                 return resolve(null);
             }
-            setTimeout(blogTimeout, 60000);
+            setTimeout(blogTimeout, 600000);
 
             // wrap callback in function to return promise resolve/reject
             const notify = () => {

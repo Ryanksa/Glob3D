@@ -13,10 +13,11 @@ const Camera = (props) => {
         const lockCamera = () => {
             if (controls.current) controls.current.lock();
         };
-        document.addEventListener("click", lockCamera);
+        const world = document.querySelector("#world");
+        if (world) world.addEventListener("click", lockCamera);
 
         return (() => {
-            document.removeEventListener("click", lockCamera);
+            if (world) document.removeEventListener("click", lockCamera);
         });
     }, []);
 
