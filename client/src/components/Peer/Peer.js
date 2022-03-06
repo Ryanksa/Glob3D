@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useFrame } from 'react-three-fiber';
 import { useSphere } from 'use-cannon';
 
 const Peer = (props) => {
   const [ref, api] = useSphere(() => ({
     mass: 1,
-    type: "Dynamic",
-    position: [props.x, props.y, props.z]
+    type: "Dynamic"
   }));
 
   useFrame(() => {
@@ -21,4 +20,4 @@ const Peer = (props) => {
   );
 };
 
-export default Peer;
+export default memo(Peer);

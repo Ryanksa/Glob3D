@@ -73,7 +73,7 @@ const Character = (props) => {
         websocket.sendData(posData);
         webrtc.broadcastData(posData);
       }
-    }, 500);
+    }, 250);
     
     return (() => {
       document.removeEventListener("keydown", handleKeyDown);
