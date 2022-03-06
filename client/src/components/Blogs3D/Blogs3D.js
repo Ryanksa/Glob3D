@@ -8,7 +8,7 @@ const Blog = (props) => {
   const texture = useLoader(TextureLoader, blog);
   return(
     <group position={props.position}>
-      <mesh position={[0, 0.1, 0]} rotation={[-Math.PI/2, 0, 0]} >
+      <mesh position={[0, 0.01, 0]} rotation={[-Math.PI/2, 0, 0]} >
         <planeBufferGeometry attach="geometry" args={[1, 1]} />
         <meshLambertMaterial attach="material" map={texture} />
       </mesh>
