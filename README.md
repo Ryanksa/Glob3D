@@ -7,7 +7,7 @@
 
 ## Description of Application
 
-This was started as a group final project for a web development course.
+This started as a group final project for a web development course.
 
 Glob3D is a blogging platform where users walk around a 3D world interacting with blog posts. The 3D world will be made up of tiles/blocks of pre-determined types of land. Initially, we may generate a 10x10-tiled world, and as the number of blog posts increases to fill up the existing space, we will dynamically generate more tiles to expand the world.
 
