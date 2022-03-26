@@ -3,24 +3,12 @@ const User = require('../../models/user');
 const Like = require('../../models/like');
 const Comment = require('../../models/comment');
 const World = require('../../models/world');
-const { generateTerrain } = require('../../utils/worldGeneration');
 const { runBlogListeners, pushBlogListener } = require('../../listeners/blogListeners');
 const { validateId, validatePosition, validateFirstAfterBlogs, sanitizeString } = require('../../utils/validate');
 const config = require('../../config');
 
 const BLOGS_MAX_DISTANCE = config.blogsMaxDistance;
 const BLOGS_LIMIT = config.blogsLimit;
-
-const updateTerrain = () => {
-    // generate more terrain if too many blogs
-    Blog.countDocuments({}).then(function(count) {
-        World.findOne({}).then(function(world) {
-            if(count > world.size*10) {
-                generateTerrain();
-            }
-        });
-    });
-};
 
 const updateUsers = (blogPosition) => {
     // update all the users within a certain radius of a blog
@@ -186,7 +174,6 @@ module.exports = {
             })
             .then(function(populatedBlog) {
                 updateUsers(populatedBlog.position);
-                updateTerrain();
                 populatedBlog.author.password = null;
                 return populatedBlog;
             })

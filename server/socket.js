@@ -1,16 +1,20 @@
 const WebSocket = require("ws");
 const User = require("./models/user");
 const Blog = require("./models/blog");
+const World = require("./models/world");
 const config = require('./config');
+const { generateTerrain } = require("./utils/worldGeneration");
 
 const WS_PORT = process.env.WS_PORT || config.wsPort;
 const BLOGS_MAX_DISTANCE = config.blogsMaxDistance;
 const BLOGS_LIMIT = config.blogsLimit;
 const BLOGS_UPDATE_DISTANCE = Math.floor(Math.sqrt(((BLOGS_MAX_DISTANCE*2)**2)/2)/2);
+const EDGE_OFFSET = 25;
 
 let wss;
 let connections = {};
 let authentications = {};
+let worldEdgeCoord = 225;
 
 const findUser = (userId) => {
   return User.findOne({ _id: userId }).then((user) => user);
@@ -47,6 +51,14 @@ const broadcastData = (self, data) => {
 const socket = {
   initiateServer: () => {
     wss = new WebSocket.Server({ port: WS_PORT });
+    World.findOne({})
+      .then((world) => {
+        const length = Math.sqrt(world.size);
+        worldEdgeCoord = (length / 2) * 50;
+      })
+      .catch(() => {
+        console.log("Using default edge coordinate");
+      });
   },
   setupOnConnection: () => {
     if (wss) {
@@ -87,15 +99,24 @@ const socket = {
 
           if (!ws.id) return;
 
-          // On position update, update connection obj, check if need to re-send blogs
+          // On position update, update connection obj,
+          // check if need to re-send blogs and update terrain
           if (stringData.startsWith("pos:::")) {
             const position = JSON.parse(stringData.slice(6));
             if (!isFinite(position[0]) || !isFinite(position[1])) {
               return;
             }
-
             connections[ws.id].position = position;
             const lastPosition = connections[ws.id].lastPosition;
+
+            if (
+              worldEdgeCoord - Math.abs(position[0]) <= EDGE_OFFSET || 
+              worldEdgeCoord - Math.abs(position[1]) <= EDGE_OFFSET
+            ) {
+              generateTerrain();
+              worldEdgeCoord += 50;
+            }
+
             if (
               Math.abs(position[0] - lastPosition[0]) > BLOGS_UPDATE_DISTANCE || 
               Math.abs(position[1] - lastPosition[1]) > BLOGS_UPDATE_DISTANCE
