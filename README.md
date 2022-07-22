@@ -2,7 +2,7 @@
 
 ## URL and Documentation
 
-- URL to application: https://glob3d.tk (Currently not deployed)
+- URL to application: NOT DEPLOYED
 - API Documentation: https://github.com/Ryanksa/Glob3D/blob/master/server/doc.md
 
 ## Description of Application
