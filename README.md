@@ -1,8 +1,7 @@
-# Project: Glob3D
+# Glob3D
 
-## URL and Documentation
+## Documentation
 
-- URL to application: NOT DEPLOYED
 - API Documentation: https://github.com/Ryanksa/Glob3D/blob/master/server/doc.md
 
 ## Description of Application
