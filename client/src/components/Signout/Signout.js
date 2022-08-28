@@ -1,10 +1,10 @@
-import React from 'react';
-import './Signout.scss';
+import React from "react";
+import "./Signout.scss";
 
-import { Redirect } from 'react-router';
+import { Redirect } from "react-router";
 
-import UserContext from '../../contexts/userContext'; 
-import { signout as signoutHelper } from '../../utils/auth';
+import UserContext from "../../contexts/userContext";
+import { signout as signoutHelper } from "../../utils/auth";
 
 class Signout extends React.Component {
   static contextType = UserContext;
@@ -14,7 +14,7 @@ class Signout extends React.Component {
 
     // https://stackoverflow.com/a/43230829
     this.state = {
-      redirect: false
+      redirect: false,
     };
   }
 
@@ -25,13 +25,15 @@ class Signout extends React.Component {
         this.setState({ redirect: true });
       })
       .catch((res) => {
-        this.context.handleError(`Something went wrong when signing out! Please try again.`);
-      });;
+        this.context.handleError(
+          `Something went wrong when signing out! Please try again.`
+        );
+      });
   }
 
   render() {
-    if(this.state.redirect) {
-      return <Redirect to='/'/>
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
     }
     return (
       <div className="signout-wrapper">

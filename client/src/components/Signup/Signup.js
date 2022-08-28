@@ -1,11 +1,17 @@
-import React from 'react';
-import './Signup.scss';
+import React from "react";
+import "./Signup.scss";
 
-import { Button, FormControl, FormHelperText, Input, InputLabel } from '@material-ui/core';
-import { Redirect } from 'react-router';
+import {
+  Button,
+  FormControl,
+  FormHelperText,
+  Input,
+  InputLabel,
+} from "@material-ui/core";
+import { Redirect } from "react-router";
 
-import UserContext from '../../contexts/userContext';
-import { signup as signupHelper, login as loginHelper } from '../../utils/auth';
+import UserContext from "../../contexts/userContext";
+import { signup as signupHelper, login as loginHelper } from "../../utils/auth";
 
 class Signup extends React.Component {
   static contextType = UserContext;
@@ -16,10 +22,10 @@ class Signup extends React.Component {
       email: "",
       password: "",
       name: "",
-      redirect: false
+      redirect: false,
     };
 
-    this.handleChange = this.handleChange.bind(this);   // handle input changes
+    this.handleChange = this.handleChange.bind(this); // handle input changes
     this.signup = this.signup.bind(this);
   }
 
@@ -39,7 +45,9 @@ class Signup extends React.Component {
         if (err && err.length > 0) {
           this.context.handleError(err);
         } else {
-          this.context.handleError(`Something went wrong when signing up! Please try again.`);
+          this.context.handleError(
+            `Something went wrong when signing up! Please try again.`
+          );
         }
       });
   }
@@ -47,12 +55,12 @@ class Signup extends React.Component {
   // handling user input code adapted from https://stackoverflow.com/a/43746799
   handleChange(event) {
     event.persist();
-    this.setState({ [event.target.id]: event.target.value })
+    this.setState({ [event.target.id]: event.target.value });
   }
 
   render() {
-    if(this.state.redirect) {
-      return <Redirect to='/world'/>
+    if (this.state.redirect) {
+      return <Redirect to="/world" />;
     }
     return (
       <div className="signup-wrapper">
@@ -60,18 +68,43 @@ class Signup extends React.Component {
           <h1>Signup</h1>
           <FormControl classes={{ root: "signup-form-field" }}>
             <InputLabel htmlFor="name">Name</InputLabel>
-            <Input id="name" aria-describedby="Name" required={true} onChange={this.handleChange}/>
-            <FormHelperText>The name you want others to call you by.</FormHelperText>
+            <Input
+              id="name"
+              aria-describedby="Name"
+              required={true}
+              onChange={this.handleChange}
+            />
+            <FormHelperText>
+              The name you want others to call you by.
+            </FormHelperText>
           </FormControl>
           <FormControl classes={{ root: "signup-form-field" }}>
             <InputLabel htmlFor="email">Email address</InputLabel>
-            <Input id="email" aria-describedby="Email address" required={true} onChange={this.handleChange}/>
+            <Input
+              id="email"
+              aria-describedby="Email address"
+              required={true}
+              onChange={this.handleChange}
+            />
           </FormControl>
           <FormControl classes={{ root: "signup-form-field" }}>
             <InputLabel htmlFor="password">Password</InputLabel>
-            <Input id="password" aria-describedby="Password" required={true} type="password" onChange={this.handleChange}/>
+            <Input
+              id="password"
+              aria-describedby="Password"
+              required={true}
+              type="password"
+              onChange={this.handleChange}
+            />
           </FormControl>
-          <Button variant="contained" classes={{ root: "signup-button" }} onClick={() => this.signup()}>Signup</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            classes={{ root: "signup-button" }}
+            onClick={() => this.signup()}
+          >
+            Signup
+          </Button>
         </div>
       </div>
     );
