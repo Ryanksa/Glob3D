@@ -1,21 +1,19 @@
 # Glob3D
 
-## Documentation
+## API Documentation
 
-- API Documentation: https://github.com/Ryanksa/Glob3D/blob/master/server/doc.md
+https://github.com/Ryanksa/Glob3D/blob/master/server/doc.md
 
-## Description of Application
+## Description
 
 This started as a group final project for a web development course.
 
-Glob3D is a blogging platform where users walk around a 3D world interacting with blog posts. The 3D world will be made up of tiles/blocks of pre-determined types of land. Initially, we may generate a 10x10-tiled world, and as the number of blog posts increases to fill up the existing space, we will dynamically generate more tiles to expand the world.
-
-On first visit, users can sign up a new account with an email address. After signing up and logging in, users will be dropped into this 3D world where they can write their own blog post at a chosen spot, read an existing blog post, like and comment on a blog post, open their inventories with a list of posts written and liked. Moreover, users can open a simple map to see their current location, as well as to search keywords to see the locations of other blog posts on the map. Users can follow each other. If user A follows user B, then user A can see the locations of user B's blog posts on their map.
+Glob3D is a blogging platform where users walk around a 3D world interacting with each other and their blog posts. The 3D world will be made up of tiles of pre-determined types of land. As users walk to the edge of the world, or as the number of blog posts increases, more tiles will get generated to expand the world.
 
 ## Features
 
 - Sign up and log in
-- Walk around the 3D world with a 3D character model
+- Walk around the 3D world with other users
 - Write and post a blog anywhere in the 3D world
 - Access and read an existing blog posts
 - Comment on blog posts
